@@ -6,6 +6,6 @@ import io.reactivex.Observable
 class ReleasesListContract private constructor() {
 
     interface Repository {
-        val releases: Observable<List<Release>>
+        fun getReleases(productId: String): Observable<List<Release>>
     }
 }

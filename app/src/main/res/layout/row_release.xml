@@ -16,11 +16,13 @@
 
         <TextView
             android:id="@+id/rowReleaseName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:lines="1"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/rowReleaseVersion"

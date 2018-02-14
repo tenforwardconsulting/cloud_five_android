@@ -46,7 +46,7 @@ class ReleasesListActivity : BaseActivity() {
         }
         releasesRecycler.adapter = releasesAdapter
 
-        releasesRepository.releases
+        releasesRepository.getReleases("whatever")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = { apps ->
