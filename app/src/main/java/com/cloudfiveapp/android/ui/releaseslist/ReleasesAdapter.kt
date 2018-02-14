@@ -1,5 +1,6 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
@@ -31,9 +32,10 @@ class ReleasesAdapter : RecyclerView.Adapter<ReleasesAdapter.ReleaseViewHolder>(
     }
 
     fun setData(list: List<Release>) {
+        val diffCallback = ReleasesDiffCallback(releases, list)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         releases = list
-        notifyDataSetChanged()
-        // TODO: diff util?
+        diffResult.dispatchUpdatesTo(this)
     }
 
     class ReleaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -50,5 +52,21 @@ class ReleasesAdapter : RecyclerView.Adapter<ReleasesAdapter.ReleaseViewHolder>(
 
     interface ReleaseInteractor {
         fun onDownloadClicked(release: Release)
+    }
+
+    private class ReleasesDiffCallback(val oldList: List<Release>, val newList: List<Release>)
+        : DiffUtil.Callback() {
+
+        override fun getOldListSize() = oldList.size
+
+        override fun getNewListSize() = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
 }

@@ -4,7 +4,7 @@ import io.reactivex.Single
 import java.security.MessageDigest
 import java.util.*
 
-class MockReleasesApi : ReleasesApi {
+class MockRandomReleasesApi : ReleasesApi {
 
     companion object {
         private const val REPO_NAME = "resident_app_android"
@@ -17,9 +17,13 @@ class MockReleasesApi : ReleasesApi {
         val n = random.nextInt(MAX_RELEASES)
         val releases = mutableListOf<Release>()
         (0 until n).forEach {
-            releases += Release(randomName(), randomVersion(), randomBuildNumber(), REPO_NAME, randomCommitHash())
+            releases += Release(randomId(), randomName(), randomVersion(), randomBuildNumber(), REPO_NAME, randomCommitHash())
         }
         return Single.just(releases)
+    }
+
+    private fun randomId(): String {
+        return random.nextInt(1000).toString()
     }
 
     private fun randomName(): String {

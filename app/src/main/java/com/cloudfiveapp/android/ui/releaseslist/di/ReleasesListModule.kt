@@ -1,7 +1,8 @@
 package com.cloudfiveapp.android.ui.releaseslist.di
 
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesAdapter
-import com.cloudfiveapp.android.ui.releaseslist.data.MockReleasesApi
+import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
+import com.cloudfiveapp.android.ui.releaseslist.data.MockRandomReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesRepository
@@ -16,7 +17,7 @@ class ReleasesListModule {
 
     @Provides
     @ReleasesListScope
-    fun releasesRepo(@Named("mock") releasesApi: ReleasesApi): ReleasesListContract.Repository {
+    fun releasesRepo(@Named("mock.ordered") releasesApi: ReleasesApi): ReleasesListContract.Repository {
         return ReleasesRepository(releasesApi)
     }
 
@@ -34,9 +35,16 @@ class ReleasesListModule {
     }
 
     @Provides
-    @Named("mock")
+    @Named("mock.random")
     @ReleasesListScope
     fun mockReleasesApi(): ReleasesApi {
-        return MockReleasesApi()
+        return MockRandomReleasesApi()
+    }
+
+    @Provides
+    @Named("mock.ordered")
+    @ReleasesListScope
+    fun mockOrderedReleasesApi(): ReleasesApi {
+        return MockOrderedReleasesApi()
     }
 }
