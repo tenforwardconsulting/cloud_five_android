@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.appslist.AppsListActivity"
+            android:name=".ui.releaseslist.ReleasesListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.CloudFive">
         </activity>

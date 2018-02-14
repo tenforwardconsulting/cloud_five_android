@@ -1,4 +1,4 @@
-package com.cloudfiveapp.android.ui.appslist
+package com.cloudfiveapp.android.ui.releaseslist
 
 import android.content.Context
 import android.content.Intent
@@ -6,51 +6,51 @@ import android.os.Bundle
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
-import com.cloudfiveapp.android.ui.appslist.data.App
-import com.cloudfiveapp.android.ui.appslist.di.DaggerAppsListComponent
-import com.cloudfiveapp.android.ui.appslist.model.AppsListContract
+import com.cloudfiveapp.android.ui.releaseslist.data.Release
+import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
+import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.util.toast
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import kotlinx.android.synthetic.main.activity_apps_list.*
+import kotlinx.android.synthetic.main.activity_releases_list.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class AppsListActivity : BaseActivity() {
+class ReleasesListActivity : BaseActivity() {
 
     companion object {
         fun newIntent(context: Context): Intent {
-            return Intent(context, AppsListActivity::class.java)
+            return Intent(context, ReleasesListActivity::class.java)
         }
     }
 
     private val component by lazy {
-        DaggerAppsListComponent.builder().appComponent(CloudFiveApp.appComponent).build()
+        DaggerReleasesListComponent.builder().appComponent(CloudFiveApp.appComponent).build()
     }
 
     @Inject
-    lateinit var appsRepository: AppsListContract.Repository
+    lateinit var releasesRepository: ReleasesListContract.Repository
 
     @Inject
-    lateinit var appsAdapter: AppsAdapter
+    lateinit var releasesAdapter: ReleasesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_apps_list)
+        setContentView(R.layout.activity_releases_list)
         component.inject(this)
 
-        appsAdapter.interactor = object : AppsAdapter.AppInteractor {
-            override fun onDownloadClicked(app: App) {
-                toast("Download ${app.name}")
+        releasesAdapter.interactor = object : ReleasesAdapter.ReleaseInteractor {
+            override fun onDownloadClicked(release: Release) {
+                toast("Download ${release.name}")
             }
         }
-        appsRecycler.adapter = appsAdapter
+        releasesRecycler.adapter = releasesAdapter
 
-        appsRepository.apps
+        releasesRepository.releases
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = { apps ->
-                            appsAdapter.setData(apps)
+                            releasesAdapter.setData(apps)
                             Timber.d("onNext")
                         },
                         onError = { throwable ->

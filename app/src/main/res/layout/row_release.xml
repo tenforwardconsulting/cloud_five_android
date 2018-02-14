@@ -12,11 +12,10 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_height="500dp">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/rowAppName"
+            android:id="@+id/rowReleaseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -24,7 +23,7 @@
             android:layout_marginEnd="8dp"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/rowAppVersion"
+            app:layout_constraintEnd_toStartOf="@+id/rowReleaseVersion"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,46 +31,46 @@
             tools:text="Tenforward Dev" />
 
         <TextView
-            android:id="@+id/rowAppVersion"
+            android:id="@+id/rowReleaseVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/rowAppName"
-            app:layout_constraintEnd_toStartOf="@+id/rowAppBuildNumber"
+            app:layout_constraintBaseline_toBaselineOf="@+id/rowReleaseName"
+            app:layout_constraintEnd_toStartOf="@+id/rowReleaseBuildNumber"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/rowAppName"
+            app:layout_constraintStart_toEndOf="@+id/rowReleaseName"
             tools:text="v3.1" />
 
         <TextView
-            android:id="@+id/rowAppBuildNumber"
+            android:id="@+id/rowReleaseBuildNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/rowAppName"
+            app:layout_constraintBaseline_toBaselineOf="@+id/rowReleaseName"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="#174" />
 
         <android.support.constraint.Barrier
-            android:id="@+id/rowAppNameBarrier"
+            android:id="@+id/rowReleaseNameBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="rowAppName,rowAppVersion,rowAppBuildNumber" />
+            app:constraint_referenced_ids="rowReleaseName,rowReleaseVersion,rowReleaseBuildNumber" />
 
         <TextView
-            android:id="@+id/rowAppRepoName"
+            android:id="@+id/rowReleaseRepoName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:fontFamily="monospace"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/rowAppNameBarrier"
+            app:layout_constraintTop_toTopOf="@+id/rowReleaseNameBarrier"
             tools:text="resident_app_android" />
 
         <TextView
-            android:id="@+id/rowAppCommitHash"
+            android:id="@+id/rowReleaseCommitHash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
@@ -79,19 +78,19 @@
             android:fontFamily="monospace"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rowAppRepoName"
+            app:layout_constraintTop_toBottomOf="@+id/rowReleaseRepoName"
             app:layout_constraintVertical_bias="0.0"
             tools:text="de38a51e" />
 
         <android.support.constraint.Barrier
-            android:id="@+id/rowAppRepoBarrier"
+            android:id="@+id/rowReleaseRepoBarrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="rowAppRepoName,rowAppCommitHash" />
+            app:constraint_referenced_ids="rowReleaseRepoName,rowReleaseCommitHash" />
 
         <FrameLayout
-            android:id="@+id/rowAppDownloadButtonContainer"
+            android:id="@+id/rowReleaseDownloadButtonContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -102,8 +101,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/rowAppRepoBarrier"
-            app:layout_constraintTop_toTopOf="@+id/rowAppNameBarrier"
+            app:layout_constraintStart_toEndOf="@+id/rowReleaseRepoBarrier"
+            app:layout_constraintTop_toTopOf="@+id/rowReleaseNameBarrier"
             app:layout_constraintVertical_bias="0.0">
 
             <ImageView

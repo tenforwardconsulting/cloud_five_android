@@ -5,23 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cloudfiveapp.android.ui.appslist.AppsListActivity">
+    tools:context="com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/appsToolbar"
+            android:id="@+id/releasesToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.CloudFive.AppBarOverlay"
-            app:title="Apps for ProductName" />
+            app:title="Releases for ProductName" />
 
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/appsRecycler"
+        android:id="@+id/releasesRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="@string/recyclerview_linearlayoutmanager"

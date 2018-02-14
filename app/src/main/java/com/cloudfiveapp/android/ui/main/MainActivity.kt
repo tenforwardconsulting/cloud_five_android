@@ -3,7 +3,7 @@ package com.cloudfiveapp.android.ui.main
 import android.os.Bundle
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.ui.appslist.AppsListActivity
+import com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity
 
 class MainActivity : BaseActivity() {
 
@@ -18,6 +18,6 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        startActivity(AppsListActivity.newIntent(this))
+        startActivity(ReleasesListActivity.newIntent(this))
     }
 }
