@@ -17,7 +17,7 @@ class MockRandomReleasesApi : ReleasesApi {
         val n = random.nextInt(MAX_RELEASES)
         val releases = mutableListOf<Release>()
         (0 until n).forEach {
-            releases += Release(randomId(), randomName(), randomVersion(), randomBuildNumber(), REPO_NAME, randomCommitHash())
+            releases += Release(randomId(), randomName(), randomVersion(), randomBuildNumber(), REPO_NAME, randomCommitHash(), MockOrderedWithDelayReleasesApi.DOWNLOAD_URL)
         }
         return Single.just(releases)
     }

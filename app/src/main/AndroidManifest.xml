@@ -4,6 +4,9 @@
     package="com.cloudfiveapp.android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name=".application.CloudFiveApp"
@@ -14,6 +17,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CloudFive"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <provider
+            android:name=".application.CloudFiveFileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+
+        </provider>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleInstance">
@@ -24,11 +40,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.releaseslist.ReleasesListActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.CloudFive">
         </activity>
+
     </application>
 
 </manifest>

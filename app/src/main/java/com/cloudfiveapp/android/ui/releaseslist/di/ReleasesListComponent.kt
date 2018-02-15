@@ -7,6 +7,7 @@ import dagger.Component
 @ReleasesListScope
 @Component(dependencies = [AppComponent::class], modules = [ReleasesListModule::class])
 interface ReleasesListComponent {
+
     fun inject(releasesListListActivity: ReleasesListActivity)
 }
 

@@ -72,6 +72,10 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
     // endregion
 
+    // region Material UI
+    implementation "com.afollestad.material-dialogs:core:0.9.6.0"
+    // endregion
+
     // region DI
     ext.daggerVersion = '2.12'
     implementation "com.google.dagger:dagger:$daggerVersion"

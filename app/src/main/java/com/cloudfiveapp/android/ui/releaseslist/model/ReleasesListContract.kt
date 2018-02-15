@@ -7,5 +7,6 @@ class ReleasesListContract private constructor() {
 
     interface Repository {
         fun getReleases(productId: String): Observable<List<Release>>
+        fun refresh()
     }
 }
