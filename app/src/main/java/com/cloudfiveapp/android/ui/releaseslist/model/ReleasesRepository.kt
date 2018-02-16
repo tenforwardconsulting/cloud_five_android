@@ -1,5 +1,6 @@
 package com.cloudfiveapp.android.ui.releaseslist.model
 
+import com.cloudfiveapp.android.ui.releaseslist.data.ProductId
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import io.reactivex.Observable
@@ -9,15 +10,19 @@ class ReleasesRepository(private val releasesApi: ReleasesApi)
     : ReleasesListContract.Repository {
 
     private val refreshes = PublishSubject.create<Unit>()
+    private var cache: MutableMap<ProductId, List<Release>> = mutableMapOf()
 
     override fun getReleases(productId: String): Observable<List<Release>> {
-        return refreshes.startWith(Unit)
+        return refreshes
                 .flatMapSingle {
                     releasesApi.getReleases(productId)
                 }
+                .doOnNext { cache[productId] = it }
+                .startWith(cache[productId] ?: emptyList())
     }
 
     override fun refresh() {
         refreshes.onNext(Unit)
+        cache.clear()
     }
 }

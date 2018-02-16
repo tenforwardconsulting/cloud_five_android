@@ -8,6 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import com.cloudfiveapp.android.application.CloudFiveApp
 import com.cloudfiveapp.android.application.CloudFiveFileProvider
+import com.cloudfiveapp.android.ui.releaseslist.data.ProductId
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.util.MIME_TYPE_APK
@@ -16,9 +17,9 @@ import com.cloudfiveapp.android.util.toUri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
@@ -32,23 +33,39 @@ class ReleasesListViewModel(application: CloudFiveApp,
     private val context: Context
         get() = getApplication()
 
-    private val downloadEvents = PublishSubject.create<DownloadEvent>()
-
     private val downloads = mutableMapOf<Long, Release>()
 
-    fun getViewState(productId: String): Observable<ViewState> {
-        return Observables.combineLatest(
-                downloadEvents.startWith(DownloadEvent.DownloadNone),
-                releasesRepository.getReleases(productId),
-                combineFunction = { downloadEvent, releases ->
-                    ViewState(false, downloadEvent, releases)
-                })
-                .startWith(ViewState.INITIAL)
-    }
+    private val downloadEventsSubject = PublishSubject.create<DownloadEvent>()
+    val downloadEvents: Observable<DownloadEvent>
+        get() = downloadEventsSubject.startWith(DownloadEvent.DownloadNone)
+
+    private val productIdSubject = BehaviorSubject.create<ProductId>()
+
+    val releases: Observable<List<Release>>
+        get() {
+            return productIdSubject
+                    .distinct()
+                    .flatMap { productId ->
+                        releasesRepository.getReleases(productId)
+                    }
+                    .doOnNext { refreshingSubject.onNext(false) }
+                    .subscribeOn(Schedulers.io())
+        }
+
+    private val refreshingSubject = PublishSubject.create<Boolean>()
+    val refreshing: Observable<Boolean>
+        get() = refreshingSubject.startWith(false)
 
     fun refreshReleases() {
+        refreshingSubject.onNext(true)
         releasesRepository.refresh()
     }
+
+    fun setProductId(productId: ProductId) {
+        productIdSubject.onNext(productId)
+    }
+
+    // TODO: Pull all this out
 
     fun downloadRelease(release: Release) {
         Completable
@@ -64,7 +81,7 @@ class ReleasesListViewModel(application: CloudFiveApp,
                     }
                     Timber.d("enqueued: $downloadId")
                     downloads[downloadId] = release
-                    downloadEvents.onNext(DownloadEvent.DownloadStarted(release))
+                    downloadEventsSubject.onNext(DownloadEvent.DownloadStarted(release))
                 }
                 .doOnSubscribe { compositeDisposable += it }
                 .subscribeOn(Schedulers.io())
@@ -75,7 +92,7 @@ class ReleasesListViewModel(application: CloudFiveApp,
         val downloadId = intent.extras.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)
         Timber.d("completed: $downloadId")
         downloads[downloadId]?.let {
-            downloadEvents.onNext(DownloadEvent.DownloadCompleted(it))
+            downloadEventsSubject.onNext(DownloadEvent.DownloadCompleted(it))
         }
     }
 
@@ -104,15 +121,6 @@ class ReleasesListViewModel(application: CloudFiveApp,
 
     private fun getDestinationFile(release: Release): File {
         return CloudFiveFileProvider.getApkFile(context, release.downloadFileName)
-    }
-
-    class ViewState(val refreshing: Boolean,
-                    val downloadEvent: DownloadEvent,
-                    val releases: List<Release>) {
-
-        companion object {
-            val INITIAL = ViewState(true, DownloadEvent.DownloadNone, emptyList())
-        }
     }
 
     sealed class DownloadEvent(val release: Release?) {

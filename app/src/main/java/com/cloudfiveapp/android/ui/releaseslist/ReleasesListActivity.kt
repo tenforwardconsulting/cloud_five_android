@@ -75,22 +75,14 @@ class ReleasesListActivity
         releasesSwipeRefresh.setOnRefreshListener {
             viewModel.refreshReleases()
         }
+
+        viewModel.setProductId("hello")
     }
 
     override fun onResume() {
         super.onResume()
         registerReceiver(downloadCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
-        viewModel.getViewState("x")
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { viewState ->
-                            render(viewState)
-                        },
-                        onError = {
-                            throw it
-                        })
+        subscribeToViewModel()
     }
 
     override fun onPause() {
@@ -112,26 +104,6 @@ class ReleasesListActivity
         }
     }
 
-    private fun render(viewState: ReleasesListViewModel.ViewState) {
-        releasesSwipeRefresh.isRefreshing = viewState.refreshing
-        releasesAdapter.setData(viewState.releases)
-        when (viewState.downloadEvent) {
-            is ReleasesListViewModel.DownloadEvent.DownloadStarted -> {
-                toast("Downloading ${viewState.downloadEvent.release?.name}")
-            }
-            is ReleasesListViewModel.DownloadEvent.DownloadCompleted -> {
-                Snackbar.make(releasesCoordinator, "Download ready", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Open") {
-                            viewState.downloadEvent.release?.let {
-                                viewModel.openReleaseFile(it)
-                            }
-                        }
-                        .setActionTextColor(ContextCompat.getColor(this, R.color.white))
-                        .show()
-            }
-        }
-    }
-
     // region ReleasesAdapter.ReleaseInteractor
 
     override fun onDownloadClicked(release: Release) {
@@ -143,6 +115,46 @@ class ReleasesListActivity
     }
 
     // endregion
+
+    private fun subscribeToViewModel() {
+        viewModel.downloadEvents
+                .doOnSubscribe { compositeDisposable += it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = { downloadEvent ->
+                            when (downloadEvent) {
+                                is ReleasesListViewModel.DownloadEvent.DownloadStarted -> {
+                                    toast("Downloading ${downloadEvent.release?.name}")
+                                }
+                                is ReleasesListViewModel.DownloadEvent.DownloadCompleted -> {
+                                    Snackbar.make(releasesCoordinator, "Download ready", Snackbar.LENGTH_INDEFINITE)
+                                            .setAction("Open") {
+                                                downloadEvent.release?.let {
+                                                    viewModel.openReleaseFile(it)
+                                                }
+                                            }
+                                            .setActionTextColor(ContextCompat.getColor(this, R.color.white))
+                                            .show()
+                                }
+                            }
+                        })
+
+        viewModel.releases
+                .doOnSubscribe { compositeDisposable += it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = { releases ->
+                            releasesAdapter.setData(releases)
+                        })
+
+        viewModel.refreshing
+                .doOnSubscribe { compositeDisposable += it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = { refreshing ->
+                            releasesSwipeRefresh.isRefreshing = refreshing
+                        })
+    }
 
     private fun requestWriteExternalStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
