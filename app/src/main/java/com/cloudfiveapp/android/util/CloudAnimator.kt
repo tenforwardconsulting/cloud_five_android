@@ -1,4 +1,4 @@
-package com.cloudfiveapp.android.ui.login
+package com.cloudfiveapp.android.util
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import com.cloudfiveapp.android.R
-import com.cloudfiveapp.android.util.nextFloatInRange
 import java.util.*
 
 class CloudAnimator(private val parentViewGroup: ViewGroup,
@@ -17,8 +16,11 @@ class CloudAnimator(private val parentViewGroup: ViewGroup,
     : LifecycleObserver {
 
     companion object {
-        private const val MIN_DURATION = 8000L
-        private const val MAX_DURATION = 22000L
+        private const val MIN_DURATION = 16000L
+        private const val MAX_DURATION = 30000L
+
+        private const val MIN_ALPHA = 0.6f
+        private const val MAX_ALPHA = 0.95f
 
         private const val MIN_START_X = 0.25f
         private const val MAX_START_X = 0.75f
@@ -70,6 +72,8 @@ class CloudAnimator(private val parentViewGroup: ViewGroup,
 
         val cloudLayoutId = cloudLayoutIds[random.nextInt(cloudLayoutIds.size)]
         val cloud = layoutInflater.inflate(cloudLayoutId, parentViewGroup, false)
+
+        cloud.alpha = random.nextFloatInRange(MIN_ALPHA, MAX_ALPHA)
 
         animations += ValueAnimator.ofFloat(minValue, maxValue).apply {
             duration = speed

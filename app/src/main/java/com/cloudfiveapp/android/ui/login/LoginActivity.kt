@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
+import com.cloudfiveapp.android.util.CloudAnimator
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity() {
