@@ -4,7 +4,7 @@ import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.mock.BehaviorDelegate
 
-class MockOrderedWithDelayReleasesApi(private val delegate: BehaviorDelegate<ReleasesApi>)
+class MockOrderedReleasesApi(private val delegate: BehaviorDelegate<ReleasesApi>)
     : ReleasesApi {
 
     companion object {
@@ -23,7 +23,8 @@ class MockOrderedWithDelayReleasesApi(private val delegate: BehaviorDelegate<Rel
                 listOf(
                         Release("1", "Tenforward Dev", "v3.2", "110", REPO_NAME, "lmn046", DOWNLOAD_URL),
                         Release("3", "Draper", "v3.1", "216", REPO_NAME, "abc123", DOWNLOAD_URL),
-                        Release("2", "Tenforward QA", "v3.1", "150", REPO_NAME, "xyz987", DOWNLOAD_URL)))
+                        Release("2", "Tenforward QA", "v3.1", "150", REPO_NAME, "xyz987", DOWNLOAD_URL)),
+                emptyList())
     }
 
     override fun getReleases(productId: String): Single<Response<List<Release>>> {

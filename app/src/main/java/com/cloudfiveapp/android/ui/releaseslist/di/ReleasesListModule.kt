@@ -3,7 +3,7 @@ package com.cloudfiveapp.android.ui.releaseslist.di
 import android.app.DownloadManager
 import com.cloudfiveapp.android.application.CloudFiveApp
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesAdapter
-import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedWithDelayReleasesApi
+import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesRepository
@@ -56,7 +56,7 @@ class ReleasesListModule {
     @Named("mock")
     @ReleasesListScope
     fun mockOrderedReleasesApi(releasesApiBehaviorDelegate: BehaviorDelegate<ReleasesApi>): ReleasesApi {
-        return MockOrderedWithDelayReleasesApi(releasesApiBehaviorDelegate)
+        return MockOrderedReleasesApi(releasesApiBehaviorDelegate)
     }
 
     @Provides

@@ -25,6 +25,7 @@ class MockNetworkModule {
         val networkBehavior = NetworkBehavior.create()
         networkBehavior.setDelay(1, TimeUnit.SECONDS)
         networkBehavior.setVariancePercent(30)
+        networkBehavior.setFailurePercent(0)
         return networkBehavior
     }
 }

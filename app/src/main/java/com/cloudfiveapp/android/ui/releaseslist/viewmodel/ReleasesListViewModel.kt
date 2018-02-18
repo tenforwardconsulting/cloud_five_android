@@ -41,20 +41,21 @@ class ReleasesListViewModel(application: CloudFiveApp,
 
     private val productIdSubject = BehaviorSubject.create<ProductId>()
 
-    val releases: Observable<List<Release>>
-        get() {
-            return productIdSubject
-                    .distinct()
-                    .flatMap { productId ->
-                        releasesRepository.getReleases(productId)
-                    }
-                    .doOnNext { refreshingSubject.onNext(false) }
-                    .subscribeOn(Schedulers.io())
-        }
-
     private val refreshingSubject = PublishSubject.create<Boolean>()
     val refreshing: Observable<Boolean>
-        get() = refreshingSubject.startWith(false)
+        get() = refreshingSubject
+
+    val releases: Observable<List<Release>> = productIdSubject
+            .distinct()
+            .flatMap { productId ->
+                releasesRepository.getReleases(productId)
+            }
+            .doOnNext {
+                refreshingSubject.onNext(false)
+            }
+            .doOnSubscribe { refreshingSubject.onNext(true) }
+            .subscribeOn(Schedulers.io())
+            .replay(1).autoConnect()
 
     fun refreshReleases() {
         refreshingSubject.onNext(true)

@@ -11,6 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import java.util.*
 
+fun View.visible(visible: Boolean) {
+    this.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
 }

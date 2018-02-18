@@ -21,6 +21,7 @@ import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModel
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
 import com.cloudfiveapp.android.util.toast
+import com.cloudfiveapp.android.util.visible
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -117,6 +118,14 @@ class ReleasesListActivity
     // endregion
 
     private fun subscribeToViewModel() {
+        viewModel.refreshing
+                .doOnSubscribe { compositeDisposable += it }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                        onNext = { refreshing ->
+                            releasesSwipeRefresh.isRefreshing = refreshing
+                        })
+
         viewModel.downloadEvents
                 .doOnSubscribe { compositeDisposable += it }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -145,14 +154,7 @@ class ReleasesListActivity
                 .subscribeBy(
                         onNext = { releases ->
                             releasesAdapter.setData(releases)
-                        })
-
-        viewModel.refreshing
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { refreshing ->
-                            releasesSwipeRefresh.isRefreshing = refreshing
+                            releasesEmptyText.visible(releases.isEmpty())
                         })
     }
 
