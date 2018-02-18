@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import java.util.*
 
 fun ViewGroup.inflate(layoutRes: Int): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, false)
@@ -36,4 +37,8 @@ fun String.toUri(): Uri {
 
 fun DownloadManager.enqueue(uri: Uri, block: DownloadManager.Request.() -> Unit): Long {
     return enqueue(DownloadManager.Request(uri).apply(block))
+}
+
+fun Random.nextFloatInRange(min: Float, max: Float): Float {
+    return min + nextFloat() * (max - min)
 }
