@@ -1,13 +1,15 @@
 package com.cloudfiveapp.android.ui.releaseslist.data
 
 import io.reactivex.Single
-import java.util.concurrent.TimeUnit
+import retrofit2.Response
+import retrofit2.mock.BehaviorDelegate
 
-class MockOrderedWithDelayReleasesApi : ReleasesApi {
+class MockOrderedWithDelayReleasesApi(private val delegate: BehaviorDelegate<ReleasesApi>)
+    : ReleasesApi {
 
     companion object {
         private const val REPO_NAME = "resident_app_android"
-        const val DOWNLOAD_URL = "https://www.cloudfiveapp.com/builds/13838/artifact"
+        private const val DOWNLOAD_URL = "https://www.cloudfiveapp.com/builds/13838/artifact"
 
         private var timesCalled = 0
 
@@ -24,9 +26,9 @@ class MockOrderedWithDelayReleasesApi : ReleasesApi {
                         Release("2", "Tenforward QA", "v3.1", "150", REPO_NAME, "xyz987", DOWNLOAD_URL)))
     }
 
-    override fun getReleases(productId: String): Single<List<Release>> {
+    override fun getReleases(productId: String): Single<Response<List<Release>>> {
         val currentCallIndex = timesCalled
         timesCalled = (timesCalled + 1) % orderedReleases.size
-        return Single.just(orderedReleases[currentCallIndex]).delay(500, TimeUnit.MILLISECONDS)
+        return delegate.returningResponse(orderedReleases[currentCallIndex]).getReleases(productId)
     }
 }

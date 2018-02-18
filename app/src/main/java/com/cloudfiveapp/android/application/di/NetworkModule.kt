@@ -6,6 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -69,6 +70,6 @@ class NetworkModule {
     @Provides
     @Singleton
     fun providesRxJava2CallAdapterFactory(): RxJava2CallAdapterFactory {
-        return RxJava2CallAdapterFactory.create()
+        return RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io())
     }
 }

@@ -17,6 +17,10 @@ class ReleasesRepository(private val releasesApi: ReleasesApi)
                 .flatMapSingle {
                     releasesApi.getReleases(productId)
                 }
+                .filter { response ->
+                    response.isSuccessful
+                }
+                .map { it.body()!! }
                 .doOnNext { cache[productId] = it }
                 .startWith(cache[productId] ?: emptyList())
     }
