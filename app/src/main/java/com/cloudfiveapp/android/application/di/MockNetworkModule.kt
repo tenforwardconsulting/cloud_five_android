@@ -22,10 +22,10 @@ class MockNetworkModule {
     @Provides
     @Singleton
     fun providesNetworkBehavior(): NetworkBehavior {
-        val networkBehavior = NetworkBehavior.create()
-        networkBehavior.setDelay(1, TimeUnit.SECONDS)
-        networkBehavior.setVariancePercent(30)
-        networkBehavior.setFailurePercent(0)
-        return networkBehavior
+        return NetworkBehavior.create().apply {
+            setDelay(1, TimeUnit.SECONDS)
+            setVariancePercent(30)
+            setFailurePercent(5)
+        }
     }
 }

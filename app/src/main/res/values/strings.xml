@@ -3,4 +3,8 @@
     <string name="recyclerview_linearlayoutmanager">android.support.v7.widget.LinearLayoutManager</string>
     <string name="build_number_formatted">#%s</string>
     <string name="row_app_content_description_download_button">Download APK</string>
+    <string name="login_content_description_logo">Cloud Five logo</string>
+    <string name="login_hint_email">Email</string>
+    <string name="login_hint_password">Password</string>
+    <string name="login_button_log_in">Log In</string>
 </resources>

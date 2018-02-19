@@ -20,8 +20,8 @@ import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModel
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
-import com.cloudfiveapp.android.util.toast
-import com.cloudfiveapp.android.util.visible
+import com.cloudfiveapp.android.util.extensions.toast
+import com.cloudfiveapp.android.util.extensions.visible
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign

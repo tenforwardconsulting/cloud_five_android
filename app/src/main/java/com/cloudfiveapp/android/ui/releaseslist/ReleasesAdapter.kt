@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
-import com.cloudfiveapp.android.util.inflate
+import com.cloudfiveapp.android.util.extensions.inflate
 import kotlinx.android.synthetic.main.row_release.view.*
 
 class ReleasesAdapter : RecyclerView.Adapter<ReleasesAdapter.ReleaseViewHolder>() {

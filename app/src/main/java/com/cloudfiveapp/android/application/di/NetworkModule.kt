@@ -3,6 +3,7 @@ package com.cloudfiveapp.android.application.di
 import android.content.Context
 import com.cloudfiveapp.android.BuildConfig
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -58,7 +59,9 @@ class NetworkModule {
     @Provides
     @Singleton
     fun providesMoshi(): Moshi {
-        return Moshi.Builder().build()
+        return Moshi.Builder()
+                .add(KotlinJsonAdapterFactory()) // Add last
+                .build()
     }
 
     @Provides

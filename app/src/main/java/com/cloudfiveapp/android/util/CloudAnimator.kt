@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import com.cloudfiveapp.android.R
+import com.cloudfiveapp.android.util.extensions.nextFloatInRange
 import java.util.*
 
 class CloudAnimator(private val parentViewGroup: ViewGroup,

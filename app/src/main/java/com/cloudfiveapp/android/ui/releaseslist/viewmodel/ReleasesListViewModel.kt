@@ -12,8 +12,8 @@ import com.cloudfiveapp.android.ui.releaseslist.data.ProductId
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.util.MIME_TYPE_APK
-import com.cloudfiveapp.android.util.enqueue
-import com.cloudfiveapp.android.util.toUri
+import com.cloudfiveapp.android.util.extensions.enqueue
+import com.cloudfiveapp.android.util.extensions.toUri
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -56,6 +56,11 @@ class ReleasesListViewModel(application: CloudFiveApp,
             .doOnSubscribe { refreshingSubject.onNext(true) }
             .subscribeOn(Schedulers.io())
             .replay(1).autoConnect()
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 
     fun refreshReleases() {
         refreshingSubject.onNext(true)
