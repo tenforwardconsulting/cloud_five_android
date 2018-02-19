@@ -5,6 +5,7 @@ import android.animation.ValueAnimator
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
@@ -13,7 +14,8 @@ import com.cloudfiveapp.android.util.extensions.nextFloatInRange
 import java.util.*
 
 class CloudAnimator(private val parentViewGroup: ViewGroup,
-                    private val layoutInflater: LayoutInflater)
+                    private val layoutInflater: LayoutInflater,
+                    private val forceBackgroundBlue: Boolean = false)
     : LifecycleObserver {
 
     companion object {
@@ -47,6 +49,10 @@ class CloudAnimator(private val parentViewGroup: ViewGroup,
         addRandomCloud(true)
         addRandomCloud(true)
         addRandomCloud()
+
+        if (forceBackgroundBlue) {
+            parentViewGroup.setBackgroundColor(ContextCompat.getColor(parentViewGroup.context, R.color.colorPrimary))
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
