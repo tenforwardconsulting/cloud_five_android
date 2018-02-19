@@ -1,10 +1,11 @@
 package com.cloudfiveapp.android.ui.releaseslist.di
 
 import android.app.DownloadManager
-import com.cloudfiveapp.android.application.CloudFiveApp
+import android.content.Context
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
+import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesRepository
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
@@ -22,18 +23,24 @@ class ReleasesListModule {
 
     @Provides
     @ReleasesListScope
-    fun viewModelFactory(application: CloudFiveApp,
-                         repository: ReleasesListContract.Repository,
-                         downloadManager: DownloadManager,
+    fun viewModelFactory(repository: ReleasesListContract.Repository,
+                         apkDownloader: ApkDownloader,
                          compositeDisposable: CompositeDisposable)
             : ReleasesListViewModelFactory {
-        return ReleasesListViewModelFactory(application, repository, downloadManager, compositeDisposable)
+        return ReleasesListViewModelFactory(repository, apkDownloader, compositeDisposable)
     }
 
     @Provides
     @ReleasesListScope
     fun releasesRepo(@Named("mock") releasesApi: ReleasesApi): ReleasesListContract.Repository {
         return ReleasesRepository(releasesApi)
+    }
+
+    @Provides
+    @ReleasesListScope
+    fun apkDownloader(context: Context, downloadManager: DownloadManager,
+                      compositeDisposable: CompositeDisposable): ApkDownloader {
+        return ApkDownloader(context, downloadManager, compositeDisposable)
     }
 
     @Provides

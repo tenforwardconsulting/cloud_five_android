@@ -18,6 +18,8 @@ import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
+import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadCompleted
+import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadStarted
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModel
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
 import com.cloudfiveapp.android.util.extensions.toast
@@ -57,10 +59,14 @@ class ReleasesListActivity
         ViewModelProviders.of(this, viewModelFactory).get(ReleasesListViewModel::class.java)
     }
 
+    private val apkDownloader by lazy {
+        viewModel.apkDownloader
+    }
+
     private val downloadCompleteReceiver by lazy {
         object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
-                viewModel.downloadComplete(intent)
+                apkDownloader.downloadComplete(intent)
             }
         }
     }
@@ -99,7 +105,6 @@ class ReleasesListActivity
             } else {
                 // denied
             }
-
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
@@ -112,7 +117,7 @@ class ReleasesListActivity
             requestWriteExternalStoragePermission()
             return
         }
-        viewModel.downloadRelease(release)
+        apkDownloader.downloadRelease(release)
     }
 
     // endregion
@@ -126,20 +131,21 @@ class ReleasesListActivity
                             releasesSwipeRefresh.isRefreshing = refreshing
                         })
 
-        viewModel.downloadEvents
+        apkDownloader
+                .downloadEvents
                 .doOnSubscribe { compositeDisposable += it }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = { downloadEvent ->
                             when (downloadEvent) {
-                                is ReleasesListViewModel.DownloadEvent.DownloadStarted -> {
+                                is DownloadStarted -> {
                                     toast("Downloading ${downloadEvent.release?.name}")
                                 }
-                                is ReleasesListViewModel.DownloadEvent.DownloadCompleted -> {
+                                is DownloadCompleted -> {
                                     Snackbar.make(releasesCoordinator, "Download ready", Snackbar.LENGTH_INDEFINITE)
                                             .setAction("Open") {
                                                 downloadEvent.release?.let {
-                                                    viewModel.openReleaseFile(it)
+                                                    apkDownloader.openReleaseFile(it)
                                                 }
                                             }
                                             .setActionTextColor(ContextCompat.getColor(this, R.color.white))
