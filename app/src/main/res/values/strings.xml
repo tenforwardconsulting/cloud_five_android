@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Cloud Five</string>
-    <string name="recyclerview_linearlayoutmanager">android.support.v7.widget.LinearLayoutManager</string>
+
+    <!--Misc-->
+    <string name="recyclerview_linearlayoutmanager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
+
+    <!--Releases-->
     <string name="build_number_formatted">#%s</string>
     <string name="row_app_content_description_download_button">Download APK</string>
+
+    <!--Login-->
     <string name="login_content_description_logo">Cloud Five logo</string>
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Password</string>
