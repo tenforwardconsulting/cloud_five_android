@@ -1,0 +1,10 @@
+ext.gitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    def hash = stdout.toString().trim()
+    stdout.close()
+    return hash
+}

@@ -13,6 +13,8 @@ if (file('my.gradle').exists()) {
     apply from: 'my.gradle'
 }
 
+apply from: 'functions.gradle'
+
 android {
     compileSdkVersion 27
 
@@ -34,6 +36,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'GIT_HASH', "\"${gitHash()}\""
     }
 
     buildTypes {
