@@ -2,7 +2,7 @@ package com.cloudfiveapp.android.ui.releaseslist.di
 
 import android.app.DownloadManager
 import android.content.Context
-import com.cloudfiveapp.android.ui.releaseslist.ReleasesAdapter
+import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader

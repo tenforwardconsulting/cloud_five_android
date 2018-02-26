@@ -16,6 +16,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
+import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleaseInteractor
+import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
 import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadCompleted
@@ -33,7 +35,7 @@ import javax.inject.Inject
 
 class ReleasesListActivity
     : BaseActivity(),
-      ReleasesAdapter.ReleaseInteractor {
+      ReleaseInteractor {
 
     companion object {
         private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
@@ -110,7 +112,7 @@ class ReleasesListActivity
         }
     }
 
-    // region ReleasesAdapter.ReleaseInteractor
+    // region ReleaseInteractor
 
     override fun onDownloadClicked(release: Release) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -159,7 +161,7 @@ class ReleasesListActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = { releases ->
-                            releasesAdapter.setData(releases)
+                            releasesAdapter.setList(releases)
                             releasesEmptyText.visible(releases.isEmpty())
                         })
     }

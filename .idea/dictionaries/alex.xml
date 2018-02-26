@@ -2,7 +2,9 @@
   <dictionary name="alex">
     <words>
       <w>interactor</w>
+      <w>linearlayoutmanager</w>
       <w>moshi</w>
+      <w>recyclerview</w>
       <w>stetho</w>
     </words>
   </dictionary>

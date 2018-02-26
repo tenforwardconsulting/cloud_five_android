@@ -69,7 +69,9 @@ dependencies {
 
     // region Arch Components
     ext.architectureComponentsVersion = '1.1.0'
-    implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
+    implementation "android.arch.lifecycle:viewmodel:$architectureComponentsVersion"
+
+    implementation "android.arch.paging:runtime:1.0.0-alpha5"
     // endregion
 
     // region Material UI
