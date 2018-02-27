@@ -2,6 +2,7 @@ package com.cloudfiveapp.android.ui.releaseslist
 
 import android.Manifest
 import android.app.DownloadManager
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,16 +13,19 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
+import com.cloudfiveapp.android.ui.common.networking.Outcome
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleaseInteractor
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadCompleted
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadStarted
+import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
+import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract.ApkDownloader.DownloadEvent.DownloadCompleted
+import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract.ApkDownloader.DownloadEvent.DownloadStarted
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModel
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
 import com.cloudfiveapp.android.util.extensions.toast
@@ -40,8 +44,11 @@ class ReleasesListActivity
     companion object {
         private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
 
-        fun newIntent(context: Context): Intent {
+        private const val EXTRA_PRODUCT_ID = "c5.extras.product_id"
+
+        fun newIntent(context: Context, productId: String): Intent {
             return Intent(context, ReleasesListActivity::class.java)
+                    .putExtra(EXTRA_PRODUCT_ID, productId)
         }
     }
 
@@ -61,7 +68,7 @@ class ReleasesListActivity
         ViewModelProviders.of(this, viewModelFactory).get(ReleasesListViewModel::class.java)
     }
 
-    private val apkDownloader by lazy {
+    private val apkDownloader: ReleasesListContract.ApkDownloader by lazy {
         viewModel.apkDownloader
     }
 
@@ -73,25 +80,26 @@ class ReleasesListActivity
         }
     }
 
+    private val productId: String? by lazy {
+        intent.extras?.getString(EXTRA_PRODUCT_ID)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_releases_list)
         component.inject(this)
 
-        releasesAdapter.interactor = this
         releasesRecycler.adapter = releasesAdapter
+        releasesAdapter.interactor = this
 
-        releasesSwipeRefresh.setOnRefreshListener {
-            viewModel.refreshReleases()
-        }
+        bindToViewModel()
 
-        viewModel.setProductId("hello")
+        viewModel.getReleasesFor(productId)
     }
 
     override fun onResume() {
         super.onResume()
         registerReceiver(downloadCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        subscribeToViewModel()
     }
 
     override fun onPause() {
@@ -124,14 +132,8 @@ class ReleasesListActivity
 
     // endregion
 
-    private fun subscribeToViewModel() {
-        viewModel.refreshing
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { refreshing ->
-                            releasesSwipeRefresh.isRefreshing = refreshing
-                        })
+    private fun bindToViewModel() {
+        releasesSwipeRefresh.setOnRefreshListener { viewModel.refreshReleasesFor(productId) }
 
         apkDownloader
                 .downloadEvents
@@ -156,14 +158,18 @@ class ReleasesListActivity
                             }
                         })
 
-        viewModel.releases
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { releases ->
-                            releasesAdapter.setList(releases)
-                            releasesEmptyText.visible(releases.isEmpty())
-                        })
+        viewModel.releases.observe(this, Observer { outcome ->
+            when (outcome) {
+                is Outcome.Loading -> releasesSwipeRefresh.isRefreshing = outcome.loading
+                is Outcome.Success -> releasesAdapter.setList(outcome.data)
+                is Outcome.Error -> {
+                    // TODO: Betterify this
+                    toast(outcome.message ?: outcome.error?.message
+                    ?: "Network error", Toast.LENGTH_LONG)
+                }
+            }
+            releasesEmptyText.visible(releasesAdapter.itemCount == 0)
+        })
     }
 
     private fun requestWriteExternalStoragePermission() {

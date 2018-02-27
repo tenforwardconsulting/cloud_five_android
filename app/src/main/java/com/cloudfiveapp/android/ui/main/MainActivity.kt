@@ -27,7 +27,7 @@ class MainActivity : BaseActivity() {
         }
 
         mainReleasesButton.setOnClickListener {
-            startActivity(ReleasesListActivity.newIntent(this))
+            startActivity(ReleasesListActivity.newIntent(this, "1"))
         }
     }
 }

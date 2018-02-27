@@ -18,17 +18,18 @@ import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
 
-class ApkDownloader(private val context: Context,
-                    private val downloadManager: DownloadManager,
-                    private val compositeDisposable: CompositeDisposable) {
+class DownloadManagerApkDownloader(private val context: Context,
+                                   private val downloadManager: DownloadManager,
+                                   private val compositeDisposable: CompositeDisposable)
+    : ReleasesListContract.ApkDownloader {
 
     private val downloads = mutableMapOf<Long, Release>()
 
-    private val downloadEventsSubject = PublishSubject.create<DownloadEvent>()
-    val downloadEvents: Observable<DownloadEvent>
-        get() = downloadEventsSubject.startWith(DownloadEvent.DownloadNone)
+    private val downloadEventsSubject = PublishSubject.create<ReleasesListContract.ApkDownloader.DownloadEvent>()
+    override val downloadEvents: Observable<ReleasesListContract.ApkDownloader.DownloadEvent>
+        get() = downloadEventsSubject.startWith(ReleasesListContract.ApkDownloader.DownloadEvent.DownloadNone)
 
-    fun downloadRelease(release: Release) {
+    override fun downloadRelease(release: Release) {
         Completable
                 .fromRunnable {
                     val downloadId = downloadManager.enqueue(release.downloadUrl.toUri()) {
@@ -42,22 +43,22 @@ class ApkDownloader(private val context: Context,
                     }
                     Timber.d("enqueued: $downloadId")
                     downloads[downloadId] = release
-                    downloadEventsSubject.onNext(DownloadEvent.DownloadStarted(release))
+                    downloadEventsSubject.onNext(ReleasesListContract.ApkDownloader.DownloadEvent.DownloadStarted(release))
                 }
                 .doOnSubscribe { compositeDisposable += it }
                 .subscribeOn(Schedulers.io())
                 .subscribe()
     }
 
-    fun downloadComplete(intent: Intent) {
+    override fun downloadComplete(intent: Intent) {
         val downloadId = intent.extras.getLong(DownloadManager.EXTRA_DOWNLOAD_ID)
         Timber.d("completed: $downloadId")
         downloads[downloadId]?.let {
-            downloadEventsSubject.onNext(DownloadEvent.DownloadCompleted(it))
+            downloadEventsSubject.onNext(ReleasesListContract.ApkDownloader.DownloadEvent.DownloadCompleted(it))
         }
     }
 
-    fun openReleaseFile(release: Release) {
+    override fun openReleaseFile(release: Release) {
         Completable
                 .fromRunnable {
                     val file = getDestinationFile(release)
@@ -84,9 +85,4 @@ class ApkDownloader(private val context: Context,
         return CloudFiveFileProvider.getApkFile(context, release.downloadFileName)
     }
 
-    sealed class DownloadEvent(val release: Release?) {
-        object DownloadNone : DownloadEvent(null)
-        class DownloadStarted(release: Release) : DownloadEvent(release)
-        class DownloadCompleted(release: Release) : DownloadEvent(release)
-    }
 }

@@ -2,12 +2,11 @@ package com.cloudfiveapp.android.ui.releaseslist.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import io.reactivex.disposables.CompositeDisposable
 
 class ReleasesListViewModelFactory(private val releasesRepository: ReleasesListContract.Repository,
-                                   private val apkDownloader: ApkDownloader,
+                                   private val apkDownloader: ReleasesListContract.ApkDownloader,
                                    private val compositeDisposable: CompositeDisposable)
     : ViewModelProvider.Factory {
 

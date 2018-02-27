@@ -2,10 +2,11 @@ package com.cloudfiveapp.android.ui.releaseslist.di
 
 import android.app.DownloadManager
 import android.content.Context
+import com.cloudfiveapp.android.ui.common.networking.ApiErrorConverter
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
+import com.cloudfiveapp.android.ui.releaseslist.model.DownloadManagerApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesRepository
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
@@ -24,7 +25,7 @@ class ReleasesListModule {
     @Provides
     @ReleasesListScope
     fun viewModelFactory(repository: ReleasesListContract.Repository,
-                         apkDownloader: ApkDownloader,
+                         apkDownloader: ReleasesListContract.ApkDownloader,
                          compositeDisposable: CompositeDisposable)
             : ReleasesListViewModelFactory {
         return ReleasesListViewModelFactory(repository, apkDownloader, compositeDisposable)
@@ -32,15 +33,18 @@ class ReleasesListModule {
 
     @Provides
     @ReleasesListScope
-    fun releasesRepo(@Named("mock") releasesApi: ReleasesApi): ReleasesListContract.Repository {
-        return ReleasesRepository(releasesApi)
+    fun releasesRepo(@Named("mock") releasesApi: ReleasesApi,
+                     errorConverter: ApiErrorConverter,
+                     compositeDisposable: CompositeDisposable)
+            : ReleasesListContract.Repository {
+        return ReleasesRepository(releasesApi, errorConverter, compositeDisposable)
     }
 
     @Provides
     @ReleasesListScope
     fun apkDownloader(context: Context, downloadManager: DownloadManager,
-                      compositeDisposable: CompositeDisposable): ApkDownloader {
-        return ApkDownloader(context, downloadManager, compositeDisposable)
+                      compositeDisposable: CompositeDisposable): ReleasesListContract.ApkDownloader {
+        return DownloadManagerApkDownloader(context, downloadManager, compositeDisposable)
     }
 
     @Provides

@@ -1,50 +1,41 @@
 package com.cloudfiveapp.android.ui.releaseslist.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.cloudfiveapp.android.ui.common.data.ProductId
+import com.cloudfiveapp.android.ui.common.networking.Outcome
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
-import io.reactivex.Observable
+import com.cloudfiveapp.android.util.extensions.toLiveData
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 
 class ReleasesListViewModel(private val releasesRepository: ReleasesListContract.Repository,
-                            val apkDownloader: ApkDownloader,
+                            val apkDownloader: ReleasesListContract.ApkDownloader,
                             private val compositeDisposable: CompositeDisposable)
     : ViewModel() {
 
-    private val productIdSubject = BehaviorSubject.create<ProductId>()
+    val releases: LiveData<Outcome<List<Release>>> by lazy {
+        releasesRepository.releasesOutcome.toLiveData(compositeDisposable)
+    }
 
-    private val refreshingSubject = PublishSubject.create<Boolean>()
-    val refreshing: Observable<Boolean>
-        get() = refreshingSubject
+    fun getReleasesFor(productId: String?) {
+        if (productId == null)
+            return
 
-    val releases: Observable<List<Release>> = productIdSubject
-            .distinct()
-            .doOnNext { refreshingSubject.onNext(true) }
-            .flatMap { productId ->
-                releasesRepository.getReleases(productId)
-            }
-            .doOnNext {
-                refreshingSubject.onNext(false)
-            }
-            .subscribeOn(Schedulers.io())
-            .replay(1).autoConnect()
+        // TODO: this ain't right. Should also check the last product id
+        // Could possibly wrap List<Release> with another object containing product id
+        if (releases.value == null) {
+            releasesRepository.refreshReleasesFor(productId)
+        }
+    }
+
+    fun refreshReleasesFor(productId: String?) {
+        if (productId != null) {
+            releasesRepository.refreshReleasesFor(productId)
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
-    }
-
-    fun refreshReleases() {
-        refreshingSubject.onNext(true)
-        releasesRepository.refresh()
-    }
-
-    fun setProductId(productId: ProductId) {
-        productIdSubject.onNext(productId)
     }
 }

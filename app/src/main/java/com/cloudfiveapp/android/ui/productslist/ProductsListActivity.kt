@@ -83,8 +83,7 @@ class ProductsListActivity
 
     override fun onProductClick(product: Product) {
         toast("Clicked on $product")
-        // TODO: pass in product ID
-        startActivity(ReleasesListActivity.newIntent(this))
+        startActivity(ReleasesListActivity.newIntent(this, product.id))
     }
 
     // endregion
