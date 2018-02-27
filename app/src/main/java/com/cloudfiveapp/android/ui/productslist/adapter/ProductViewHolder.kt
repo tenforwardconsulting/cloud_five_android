@@ -10,7 +10,7 @@ class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), Lay
 
     override val containerView: View = itemView
 
-    fun bind(product: Product, interactor: ProductsInteractor?) {
+    fun bind(product: Product, interactor: ProductInteractor?) {
         itemView.productName.text = product.name
         itemView.setOnClickListener { interactor?.onProductClick(product) }
     }

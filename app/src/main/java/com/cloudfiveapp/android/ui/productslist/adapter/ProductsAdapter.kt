@@ -22,7 +22,7 @@ class ProductsAdapter : ListAdapter<Product, ProductViewHolder>(DIFF_CALLBACK) {
         }
     }
 
-    var interactor: ProductsInteractor? = null
+    var interactor: ProductInteractor? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(parent.inflate(R.layout.row_product))

@@ -11,7 +11,7 @@ import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
 import com.cloudfiveapp.android.ui.common.networking.Outcome
 import com.cloudfiveapp.android.ui.productslist.adapter.ProductsAdapter
-import com.cloudfiveapp.android.ui.productslist.adapter.ProductsInteractor
+import com.cloudfiveapp.android.ui.productslist.adapter.ProductInteractor
 import com.cloudfiveapp.android.ui.productslist.data.Product
 import com.cloudfiveapp.android.ui.productslist.di.DaggerProductsListComponent
 import com.cloudfiveapp.android.ui.productslist.viewmodel.ProductsListViewModel
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class ProductsListActivity
     : BaseActivity(),
-      ProductsInteractor {
+      ProductInteractor {
 
     companion object {
         fun newIntent(context: Context): Intent {
@@ -79,7 +79,7 @@ class ProductsListActivity
         })
     }
 
-    // region ProductsInteractor
+    // region ProductInteractor
 
     override fun onProductClick(product: Product) {
         toast("Clicked on $product")

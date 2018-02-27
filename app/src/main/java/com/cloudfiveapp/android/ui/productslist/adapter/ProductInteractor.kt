@@ -2,6 +2,6 @@ package com.cloudfiveapp.android.ui.productslist.adapter
 
 import com.cloudfiveapp.android.ui.productslist.data.Product
 
-interface ProductsInteractor {
+interface ProductInteractor {
     fun onProductClick(product: Product)
 }
