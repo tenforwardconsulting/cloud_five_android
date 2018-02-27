@@ -2,6 +2,8 @@ package com.cloudfiveapp.android.application.di
 
 import android.content.Context
 import com.cloudfiveapp.android.BuildConfig
+import com.cloudfiveapp.android.ui.common.data.ApiError
+import com.cloudfiveapp.android.ui.common.networking.ApiErrorConverter
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
@@ -31,6 +33,12 @@ class NetworkModule {
                 .addCallAdapterFactory(rxJava2CallAdapterFactory)
                 .client(okHttpClient)
                 .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providesApiErrorConverter(retrofit: Retrofit): ApiErrorConverter {
+        return retrofit.responseBodyConverter<ApiError>(ApiError::class.java, emptyArray())
     }
 
     @Provides
