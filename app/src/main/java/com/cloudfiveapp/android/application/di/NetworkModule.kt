@@ -1,6 +1,5 @@
 package com.cloudfiveapp.android.application.di
 
-import android.content.Context
 import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.ui.common.data.ApiError
 import com.cloudfiveapp.android.ui.common.networking.ApiErrorConverter
@@ -19,7 +18,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+class NetworkModule(private val cache: Cache) {
 
     @Provides
     @Singleton
@@ -59,9 +58,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun providesOkHttpCache(context: Context): Cache {
-        val cacheSize = 10 * 1024 * 1024 // 10 MB
-        return Cache(context.cacheDir, cacheSize.toLong())
+    fun providesOkHttpCache(): Cache {
+        return cache
     }
 
     @Provides

@@ -6,8 +6,11 @@ import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.application.di.AppComponent
 import com.cloudfiveapp.android.application.di.AppModule
 import com.cloudfiveapp.android.application.di.DaggerAppComponent
+import com.cloudfiveapp.android.application.di.NetworkModule
 import com.facebook.stetho.Stetho
 import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
+import okhttp3.Cache
 import timber.log.Timber
 
 class CloudFiveApp : Application() {
@@ -19,18 +22,28 @@ class CloudFiveApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initDI()
-        initStetho()
         initStrictMode()
+        initStetho()
         initTimber()
     }
 
     private fun initDI() {
-        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
+        // Cheat a little and init the OkHttp Cache before initializing StrictMode to avoid the
+        // warning about accessing the disk on the main thread.
+        val cacheSize = 10 * 1024 * 1024 // 10 MB
+        val cache = Cache(cacheDir, cacheSize.toLong())
+
+        appComponent = DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .networkModule(NetworkModule(cache))
+                .build()
     }
 
     private fun initStetho() {
         if (BuildConfig.DEBUG) {
             Completable.fromRunnable { Stetho.initializeWithDefaults(this) }
+                    .subscribeOn(Schedulers.io())
+                    .subscribe()
         }
     }
 
