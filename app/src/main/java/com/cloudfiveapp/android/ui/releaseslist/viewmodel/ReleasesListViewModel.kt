@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.ui.releaseslist.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import com.cloudfiveapp.android.ui.releaseslist.data.ProductId
+import com.cloudfiveapp.android.ui.common.data.ProductId
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract

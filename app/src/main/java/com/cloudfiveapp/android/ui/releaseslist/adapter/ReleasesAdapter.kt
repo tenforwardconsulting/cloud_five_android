@@ -10,7 +10,7 @@ import com.cloudfiveapp.android.util.extensions.inflate
 class ReleasesAdapter : ListAdapter<Release, ReleaseViewHolder>(DIFF_CALLBACK) {
 
     companion object {
-        val DIFF_CALLBACK = object : DiffCallback<Release>() {
+        private val DIFF_CALLBACK = object : DiffCallback<Release>() {
 
             override fun areItemsTheSame(oldItem: Release, newItem: Release): Boolean {
                 return oldItem.id == newItem.id
