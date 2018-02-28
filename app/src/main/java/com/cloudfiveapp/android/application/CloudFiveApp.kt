@@ -7,6 +7,7 @@ import com.cloudfiveapp.android.application.di.AppComponent
 import com.cloudfiveapp.android.application.di.AppModule
 import com.cloudfiveapp.android.application.di.DaggerAppComponent
 import com.cloudfiveapp.android.application.di.NetworkModule
+import com.cloudfiveapp.android.application.networking.DeprecatedApiHandler
 import com.facebook.stetho.Stetho
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers
@@ -33,9 +34,15 @@ class CloudFiveApp : Application() {
         val cacheSize = 10 * 1024 * 1024 // 10 MB
         val cache = Cache(cacheDir, cacheSize.toLong())
 
+        val deprecatedApiHandler = object : DeprecatedApiHandler {
+            override fun onDeprecatedApi() {
+                Timber.d("TODO: Handle deprecated API")
+            }
+        }
+
         appComponent = DaggerAppComponent.builder()
                 .appModule(AppModule(this))
-                .networkModule(NetworkModule(cache))
+                .networkModule(NetworkModule(cache, deprecatedApiHandler))
                 .build()
     }
 

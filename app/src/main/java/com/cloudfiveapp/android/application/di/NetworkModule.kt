@@ -1,6 +1,7 @@
 package com.cloudfiveapp.android.application.di
 
 import com.cloudfiveapp.android.BuildConfig
+import com.cloudfiveapp.android.application.networking.DeprecatedApiHandler
 import com.cloudfiveapp.android.ui.common.data.ApiError
 import com.cloudfiveapp.android.ui.common.networking.ApiErrorConverter
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -10,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Cache
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -18,7 +20,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class NetworkModule(private val cache: Cache) {
+class NetworkModule(private val cache: Cache,
+                    private val deprecatedApiHandler: DeprecatedApiHandler) {
 
     @Provides
     @Singleton
@@ -48,11 +51,15 @@ class NetworkModule(private val cache: Cache) {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(cache: Cache): OkHttpClient {
+    fun providesOkHttpClient(cache: Cache,
+                             deprecatedApiNetworkInterceptor: Interceptor)
+            : OkHttpClient {
+
         val client = OkHttpClient.Builder().cache(cache)
         if (BuildConfig.DEBUG) {
             client.addNetworkInterceptor(StethoInterceptor())
         }
+        client.addInterceptor(deprecatedApiNetworkInterceptor)
         return client.build()
     }
 
@@ -60,6 +67,18 @@ class NetworkModule(private val cache: Cache) {
     @Singleton
     fun providesOkHttpCache(): Cache {
         return cache
+    }
+
+    @Provides
+    @Singleton
+    fun providesDeprecatedApiNetworkInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val response = chain.proceed(chain.request())
+            if (response.code() == 410) {
+                deprecatedApiHandler.onDeprecatedApi()
+            }
+            response
+        }
     }
 
     @Provides
