@@ -67,7 +67,7 @@ class ProductsListActivity
                     productsSwipeRefresh.isRefreshing = outcome.loading
                 }
                 is Outcome.Success -> {
-                    adapter.setList(outcome.data)
+                    adapter.submitList(outcome.data)
                 }
                 is Outcome.Error -> {
                     // TODO: Betterify this

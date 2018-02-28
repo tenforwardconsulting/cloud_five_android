@@ -161,7 +161,7 @@ class ReleasesListActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
                         onNext = { releases ->
-                            releasesAdapter.setList(releases)
+                            releasesAdapter.submitList(releases)
                             releasesEmptyText.visible(releases.isEmpty())
                         })
     }
