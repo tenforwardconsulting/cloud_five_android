@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.CloudFiveApp
@@ -12,7 +13,6 @@ import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel
 import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel.LoginViewState.*
 import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModelFactory
 import com.cloudfiveapp.android.util.CloudAnimator
-import com.cloudfiveapp.android.util.extensions.addOnTextChangedListener
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard
 import com.cloudfiveapp.android.util.extensions.toast
@@ -45,16 +45,6 @@ class LoginActivity : BaseActivity() {
         component.inject(this)
         lifecycle.addObserver(CloudAnimator(loginParentView, layoutInflater))
 
-        loginEmailInput.addOnTextChangedListener {
-            loginEmailTextInputLayout.error = null
-            loginPasswordTextInputLayout.error = null
-        }
-
-        loginPasswordInput.addOnTextChangedListener {
-            loginEmailTextInputLayout.error = null
-            loginPasswordTextInputLayout.error = null
-        }
-
         bindToViewModel()
     }
 
@@ -64,6 +54,8 @@ class LoginActivity : BaseActivity() {
             when (loginViewState) {
                 is Loading -> {
                     disableInputs()
+                    loginEmailTextInputLayout.error = null
+                    loginPasswordTextInputLayout.error = null
                 }
                 is LoggedIn -> {
                     toast("Login success!")
@@ -83,11 +75,15 @@ class LoginActivity : BaseActivity() {
             }
         })
 
-        loginButton.setOnClickListener {
-            val email = loginEmailInput.text.toString()
-            val password = loginPasswordInput.text.toString()
-            if (email.isNotBlank() && password.isNotBlank()) {
-                viewModel.login(email, password)
+        loginButton.setOnClickListener { attemptLogin() }
+
+        loginPasswordInput.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    attemptLogin()
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -102,5 +98,13 @@ class LoginActivity : BaseActivity() {
         loginEmailTextInputLayout.isEnabled = false
         loginPasswordTextInputLayout.isEnabled = false
         loginButton.isEnabled = false
+    }
+
+    private fun attemptLogin() {
+        val email = loginEmailInput.text.toString()
+        val password = loginPasswordInput.text.toString()
+        if (email.isNotBlank() && password.isNotBlank()) {
+            viewModel.login(email, password)
+        }
     }
 }

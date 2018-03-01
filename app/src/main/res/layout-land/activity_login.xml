@@ -72,6 +72,7 @@
                 android:id="@+id/loginPasswordInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="monospace"
                 android:hint="@string/login_hint_password"
                 android:inputType="textPassword" />
 
