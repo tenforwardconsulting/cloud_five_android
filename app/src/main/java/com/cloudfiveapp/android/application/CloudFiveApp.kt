@@ -17,6 +17,7 @@ class CloudFiveApp : Application() {
 
     companion object {
         lateinit var appComponent: AppComponent
+            private set
     }
 
     override fun onCreate() {

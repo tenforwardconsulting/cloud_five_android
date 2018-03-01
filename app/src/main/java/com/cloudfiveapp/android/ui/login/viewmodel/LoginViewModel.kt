@@ -13,9 +13,10 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
-class LoginViewModel(private val loginApi: LoginApi,
-                     private val compositeDisposable: CompositeDisposable)
+class LoginViewModel(private val loginApi: LoginApi)
     : ViewModel() {
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val loginAttempts = PublishSubject.create<LoginRequest>()
 

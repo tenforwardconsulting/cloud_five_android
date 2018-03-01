@@ -7,18 +7,15 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.application.CloudFiveApp
-import com.cloudfiveapp.android.ui.login.di.DaggerLoginComponent
+import com.cloudfiveapp.android.application.di.Injector
 import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel
 import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel.LoginViewState.*
-import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModelFactory
 import com.cloudfiveapp.android.util.CloudAnimator
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard
 import com.cloudfiveapp.android.util.extensions.toast
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
-import javax.inject.Inject
 
 class LoginActivity : BaseActivity() {
 
@@ -28,12 +25,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private val component by lazy {
-        DaggerLoginComponent.builder().appComponent(CloudFiveApp.appComponent).build()
-    }
-
-    @Inject
-    lateinit var viewModelFactory: LoginViewModelFactory
+    val viewModelFactory = Injector.get().loginViewModelFactory()
 
     private val viewModel by lazy {
         viewModelFactory.get(this, LoginViewModel::class)
@@ -42,7 +34,6 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        component.inject(this)
         lifecycle.addObserver(CloudAnimator(loginParentView, layoutInflater))
 
         bindToViewModel()
