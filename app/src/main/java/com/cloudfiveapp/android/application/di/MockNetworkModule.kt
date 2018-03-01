@@ -28,8 +28,8 @@ class MockNetworkModule {
         return NetworkBehavior.create().apply {
             setDelay(1, TimeUnit.SECONDS)
             setVariancePercent(30)
-            setFailurePercent(3)
-            setErrorPercent(10)
+            setFailurePercent(0)
+            setErrorPercent(0)
             setErrorFactory {
                 Response.error<Any>(404,
                         ResponseBody.create(

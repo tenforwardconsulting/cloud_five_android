@@ -5,6 +5,7 @@ import com.cloudfiveapp.android.ui.login.data.MockLoginApi
 import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModelFactory
 import dagger.Module
 import dagger.Provides
+import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Retrofit
 import retrofit2.mock.BehaviorDelegate
 import retrofit2.mock.MockRetrofit
@@ -16,8 +17,10 @@ class LoginModule {
 
     @Provides
     @LoginScope
-    fun providesViewModelFactory(@Named("mock") loginApi: LoginApi): LoginViewModelFactory {
-        return LoginViewModelFactory(loginApi)
+    fun providesViewModelFactory(@Named("mock") loginApi: LoginApi,
+                                 compositeDisposable: CompositeDisposable)
+            : LoginViewModelFactory {
+        return LoginViewModelFactory(loginApi, compositeDisposable)
     }
 
     @Provides
@@ -25,6 +28,12 @@ class LoginModule {
     fun providesLoginApi(retrofit: Retrofit): LoginApi {
         return retrofit.create(LoginApi::class.java)
     }
+
+    @Provides
+    @LoginScope
+    fun providesCompositeDisposable() = CompositeDisposable()
+
+    // Mock
 
     @Provides
     @LoginScope
