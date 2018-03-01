@@ -4,11 +4,12 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.cloudfiveapp.android.ui.login.data.LoginApi
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class LoginViewModelFactory
-@Inject constructor(private val loginApi: LoginApi)
+@Inject constructor(@Named("mock") private val loginApi: LoginApi)
     : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

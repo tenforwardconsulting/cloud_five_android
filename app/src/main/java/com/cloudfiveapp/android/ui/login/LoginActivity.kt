@@ -25,7 +25,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    val viewModelFactory = Injector.get().loginViewModelFactory()
+    private val viewModelFactory = Injector.get().loginViewModelFactory()
 
     private val viewModel by lazy {
         viewModelFactory.get(this, LoginViewModel::class)

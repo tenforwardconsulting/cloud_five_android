@@ -8,9 +8,10 @@ import com.cloudfiveapp.android.ui.productslist.model.ProductsListContract
 import com.cloudfiveapp.android.util.extensions.toLiveData
 import io.reactivex.disposables.CompositeDisposable
 
-class ProductsListViewModel(private val repository: ProductsListContract.Repository,
-                            private val compositeDisposable: CompositeDisposable)
+class ProductsListViewModel(private val repository: ProductsListContract.Repository)
     : ViewModel() {
+
+    private val compositeDisposable = CompositeDisposable()
 
     val products: LiveData<Outcome<List<Product>>> by lazy {
         repository.productsOutcome.toLiveData(compositeDisposable)

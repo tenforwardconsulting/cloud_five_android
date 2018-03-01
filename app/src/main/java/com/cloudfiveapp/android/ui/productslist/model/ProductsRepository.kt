@@ -6,15 +6,17 @@ import com.cloudfiveapp.android.ui.productslist.data.Product
 import com.cloudfiveapp.android.ui.productslist.data.ProductsApi
 import com.cloudfiveapp.android.util.extensions.toResult
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class ProductsRepository(private val productsApi: ProductsApi,
-                         private val errorConverter: ApiErrorConverter,
-                         private val compositeDisposable: CompositeDisposable)
+@Singleton
+class ProductsRepository
+@Inject constructor(@Named("mock") private val productsApi: ProductsApi,
+                    private val errorConverter: ApiErrorConverter)
     : ProductsListContract.Repository {
 
     override val productsOutcome: PublishSubject<Outcome<List<Product>>> = PublishSubject.create()
@@ -34,6 +36,5 @@ class ProductsRepository(private val productsApi: ProductsApi,
                             productsOutcome.onNext(Outcome.loading(false))
                             productsOutcome.onNext(Outcome.error(error))
                         })
-                .addTo(compositeDisposable)
     }
 }
