@@ -4,12 +4,14 @@ import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.intent.rule.IntentsTestRule
+import android.support.test.espresso.matcher.ViewMatchers.isEnabled
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.runner.AndroidJUnit4
 import com.cloudfiveapp.android.BaseTest
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.util.hasTextInputLayoutError
 import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.not
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +29,9 @@ class LoginActivityTest : BaseTest() {
         onView(withId(R.id.loginEmailInput)).perform(clearText(), replaceText("test@test.com"))
         onView(withId(R.id.loginPasswordInput)).perform(clearText(), replaceText("test"))
         onView(withId(R.id.loginButton)).perform(click())
-        Thread.sleep(1000)
+        onView(withId(R.id.loginEmailTextInputLayout)).check(matches(not(isEnabled())))
+        onView(withId(R.id.loginPasswordTextInputLayout)).check(matches(not(isEnabled())))
+        Thread.sleep(1500)
         assertTrue(activityTestRule.activity.isFinishing)
     }
 
@@ -37,8 +41,13 @@ class LoginActivityTest : BaseTest() {
         onView(withId(R.id.loginEmailInput)).perform(clearText(), replaceText("test@test.com"))
         onView(withId(R.id.loginPasswordInput)).perform(clearText(), replaceText("wrong_password"))
         onView(withId(R.id.loginButton)).perform(click())
-        Thread.sleep(1000)
+        onView(withId(R.id.loginEmailTextInputLayout)).check(matches(not(isEnabled())))
+        onView(withId(R.id.loginPasswordTextInputLayout)).check(matches(not(isEnabled())))
+        Thread.sleep(1500)
         onView(withId(R.id.loginEmailTextInputLayout)).check(matches(hasTextInputLayoutError("Invalid email/password combination")))
         onView(withId(R.id.loginPasswordTextInputLayout)).check(matches(hasTextInputLayoutError("Invalid email/password combination")))
+
+        onView(withId(R.id.loginEmailTextInputLayout)).check(matches(isEnabled()))
+        onView(withId(R.id.loginPasswordTextInputLayout)).check(matches(isEnabled()))
     }
 }
