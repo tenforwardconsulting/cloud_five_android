@@ -69,6 +69,8 @@ dependencies {
     ext.espressoVersion = '3.0.1'
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espressoVersion"
+
+    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
     // endregion
 
     // region Support Libs
