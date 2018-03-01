@@ -17,10 +17,16 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ApkDownloader(private val context: Context,
-                    private val downloadManager: DownloadManager,
-                    private val compositeDisposable: CompositeDisposable) {
+@Singleton
+class ApkDownloader
+@Inject constructor(private val context: Context,
+                    private val downloadManager: DownloadManager) {
+
+    // TODO: is this ok?
+    private val compositeDisposable = CompositeDisposable()
 
     private val downloads = mutableMapOf<Long, Release>()
 

@@ -4,8 +4,13 @@ import com.cloudfiveapp.android.ui.releaseslist.data.Release
 import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class ReleasesRepository(private val releasesApi: ReleasesApi)
+@Singleton
+class ReleasesRepository
+@Inject constructor(@Named("mock") private val releasesApi: ReleasesApi)
     : ReleasesListContract.Repository {
 
     private val refreshes = PublishSubject.create<Unit>()

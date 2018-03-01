@@ -4,6 +4,8 @@ import com.cloudfiveapp.android.ui.login.data.LoginApi
 import com.cloudfiveapp.android.ui.login.data.MockLoginApi
 import com.cloudfiveapp.android.ui.productslist.data.MockProductsApi
 import com.cloudfiveapp.android.ui.productslist.data.ProductsApi
+import com.cloudfiveapp.android.ui.releaseslist.data.MockOrderedReleasesApi
+import com.cloudfiveapp.android.ui.releaseslist.data.ReleasesApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.mock.BehaviorDelegate
@@ -44,6 +46,23 @@ class MockApiModule {
     @Singleton
     fun providesProductsApiDelegate(mockRetrofit: MockRetrofit): BehaviorDelegate<ProductsApi> {
         return mockRetrofit.create(ProductsApi::class.java)
+    }
+
+    // endregion
+
+    // region ReleasesList
+
+    @Provides
+    @Named("mock")
+    @Singleton
+    fun mockOrderedReleasesApi(releasesApiBehaviorDelegate: BehaviorDelegate<ReleasesApi>): ReleasesApi {
+        return MockOrderedReleasesApi(releasesApiBehaviorDelegate)
+    }
+
+    @Provides
+    @Singleton
+    fun providesReleasesApiBehaviorDelegate(mockRetrofit: MockRetrofit): BehaviorDelegate<ReleasesApi> {
+        return mockRetrofit.create(ReleasesApi::class.java)
     }
 
     // endregion

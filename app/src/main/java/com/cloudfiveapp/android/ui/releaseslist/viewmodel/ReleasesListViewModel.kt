@@ -12,9 +12,10 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 
 class ReleasesListViewModel(private val releasesRepository: ReleasesListContract.Repository,
-                            val apkDownloader: ApkDownloader,
-                            private val compositeDisposable: CompositeDisposable)
+                            val apkDownloader: ApkDownloader)
     : ViewModel() {
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val productIdSubject = BehaviorSubject.create<ProductId>()
 

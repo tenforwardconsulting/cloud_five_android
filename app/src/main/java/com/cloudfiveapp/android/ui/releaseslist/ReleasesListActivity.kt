@@ -15,15 +15,13 @@ import android.support.v4.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.application.CloudFiveApp
+import com.cloudfiveapp.android.application.di.Injector
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleaseInteractor
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
-import com.cloudfiveapp.android.ui.releaseslist.di.DaggerReleasesListComponent
 import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadCompleted
 import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader.DownloadEvent.DownloadStarted
 import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModel
-import com.cloudfiveapp.android.ui.releaseslist.viewmodel.ReleasesListViewModelFactory
 import com.cloudfiveapp.android.util.extensions.toast
 import com.cloudfiveapp.android.util.extensions.visible
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -31,7 +29,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_releases_list.*
-import javax.inject.Inject
 
 class ReleasesListActivity
     : BaseActivity(),
@@ -45,15 +42,9 @@ class ReleasesListActivity
         }
     }
 
-    private val component by lazy {
-        DaggerReleasesListComponent.builder().appComponent(CloudFiveApp.appComponent).build()
-    }
+    private val viewModelFactory = Injector.get().releasesListViewModelFactory()
 
-    @Inject
-    lateinit var viewModelFactory: ReleasesListViewModelFactory
-
-    @Inject
-    lateinit var releasesAdapter: ReleasesAdapter
+    private val releasesAdapter = ReleasesAdapter()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -76,7 +67,6 @@ class ReleasesListActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_releases_list)
-        component.inject(this)
 
         releasesAdapter.interactor = this
         releasesRecycler.adapter = releasesAdapter
