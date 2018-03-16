@@ -2,6 +2,7 @@ package com.cloudfiveapp.android.ui.releaseslist
 
 import android.Manifest
 import android.app.DownloadManager
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,10 +13,12 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.di.Injector
+import com.cloudfiveapp.android.ui.common.networking.Outcome
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleaseInteractor
 import com.cloudfiveapp.android.ui.releaseslist.adapter.ReleasesAdapter
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
@@ -29,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_releases_list.*
+import timber.log.Timber
 
 class ReleasesListActivity
     : BaseActivity(),
@@ -44,17 +48,15 @@ class ReleasesListActivity
 
     private val viewModelFactory = Injector.get().releasesListViewModelFactory()
 
-    private val releasesAdapter = ReleasesAdapter()
-
-    private val compositeDisposable = CompositeDisposable()
-
     private val viewModel by lazy {
         ViewModelProviders.of(this, viewModelFactory).get(ReleasesListViewModel::class.java)
     }
 
-    private val apkDownloader by lazy {
-        viewModel.apkDownloader
-    }
+    private val compositeDisposable = CompositeDisposable()
+
+    private val apkDownloader = Injector.get().apkDownloader()
+
+    private val releasesAdapter = ReleasesAdapter()
 
     private val downloadCompleteReceiver by lazy {
         object : BroadcastReceiver() {
@@ -75,13 +77,14 @@ class ReleasesListActivity
             viewModel.refreshReleases()
         }
 
-        viewModel.setProductId("hello")
+        bindToViewModel()
+        viewModel.getReleases("hello")
     }
 
     override fun onResume() {
         super.onResume()
         registerReceiver(downloadCompleteReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-        subscribeToViewModel()
+        subscribeToApkDownloader()
     }
 
     override fun onPause() {
@@ -114,15 +117,27 @@ class ReleasesListActivity
 
     // endregion
 
-    private fun subscribeToViewModel() {
-        viewModel.refreshing
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { refreshing ->
-                            releasesSwipeRefresh.isRefreshing = refreshing
-                        })
+    private fun bindToViewModel() {
+        viewModel.releases.observe(this, Observer { outcome ->
+            Timber.d("outcome: $outcome")
+            when (outcome) {
+                is Outcome.Loading -> {
+                    releasesSwipeRefresh.isRefreshing = outcome.loading
+                }
+                is Outcome.Success -> {
+                    releasesAdapter.submitList(outcome.data)
+                    releasesEmptyText.visible(outcome.data.isEmpty())
+                }
+                is Outcome.Error -> {
+                    // TODO: Betterify this
+                    toast(outcome.message ?: outcome.error?.message
+                    ?: "Network error", Toast.LENGTH_LONG)
+                }
+            }
+        })
+    }
 
+    private fun subscribeToApkDownloader() {
         apkDownloader
                 .downloadEvents
                 .doOnSubscribe { compositeDisposable += it }
@@ -144,15 +159,6 @@ class ReleasesListActivity
                                             .show()
                                 }
                             }
-                        })
-
-        viewModel.releases
-                .doOnSubscribe { compositeDisposable += it }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { releases ->
-                            releasesAdapter.submitList(releases)
-                            releasesEmptyText.visible(releases.isEmpty())
                         })
     }
 

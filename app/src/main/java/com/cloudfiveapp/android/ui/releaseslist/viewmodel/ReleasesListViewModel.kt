@@ -1,51 +1,40 @@
 package com.cloudfiveapp.android.ui.releaseslist.viewmodel
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.cloudfiveapp.android.ui.common.data.ProductId
+import com.cloudfiveapp.android.ui.common.networking.Outcome
 import com.cloudfiveapp.android.ui.releaseslist.data.Release
-import com.cloudfiveapp.android.ui.releaseslist.model.ApkDownloader
 import com.cloudfiveapp.android.ui.releaseslist.model.ReleasesListContract
-import io.reactivex.Observable
+import com.cloudfiveapp.android.util.extensions.toLiveData
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 
-class ReleasesListViewModel(private val releasesRepository: ReleasesListContract.Repository,
-                            val apkDownloader: ApkDownloader)
+class ReleasesListViewModel(private val releasesRepository: ReleasesListContract.Repository)
     : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val productIdSubject = BehaviorSubject.create<ProductId>()
+    private var productId: ProductId? = null
 
-    private val refreshingSubject = PublishSubject.create<Boolean>()
-    val refreshing: Observable<Boolean>
-        get() = refreshingSubject
-
-    val releases: Observable<List<Release>> = productIdSubject
-            .distinct()
-            .doOnNext { refreshingSubject.onNext(true) }
-            .flatMap { productId ->
-                releasesRepository.getReleases(productId)
-            }
-            .doOnNext {
-                refreshingSubject.onNext(false)
-            }
-            .subscribeOn(Schedulers.io())
-            .replay(1).autoConnect()
+    val releases: LiveData<Outcome<List<Release>>> by lazy {
+        releasesRepository.releasesOutcome.toLiveData(compositeDisposable)
+    }
 
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
     }
 
-    fun refreshReleases() {
-        refreshingSubject.onNext(true)
-        releasesRepository.refresh()
+    fun getReleases(productId: ProductId) {
+        if (this.productId != productId || releases.value == null) {
+            this.productId = productId
+            releasesRepository.refreshReleases(productId)
+        }
     }
 
-    fun setProductId(productId: ProductId) {
-        productIdSubject.onNext(productId)
+    fun refreshReleases() {
+        productId?.let {
+            releasesRepository.refreshReleases(it)
+        }
     }
 }

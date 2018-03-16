@@ -48,18 +48,12 @@ class NetworkModule(private val cache: Cache) {
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(cache: Cache): OkHttpClient {
+    fun providesOkHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder().cache(cache)
         if (BuildConfig.DEBUG) {
             client.addNetworkInterceptor(StethoInterceptor())
         }
         return client.build()
-    }
-
-    @Provides
-    @Singleton
-    fun providesOkHttpCache(): Cache {
-        return cache
     }
 
     @Provides
