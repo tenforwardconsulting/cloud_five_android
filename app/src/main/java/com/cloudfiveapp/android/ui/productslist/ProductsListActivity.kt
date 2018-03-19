@@ -8,12 +8,9 @@ import android.os.Bundle
 import android.widget.Toast
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.application.di.Injector
-import com.cloudfiveapp.android.ui.common.networking.Outcome
-import com.cloudfiveapp.android.ui.productslist.adapter.ProductsAdapter
-import com.cloudfiveapp.android.ui.productslist.adapter.ProductsInteractor
-import com.cloudfiveapp.android.ui.productslist.data.Product
-import com.cloudfiveapp.android.ui.productslist.viewmodel.ProductsListViewModel
+import com.cloudfiveapp.android.application.injection.Injector
+import com.cloudfiveapp.android.data.model.Outcome
+import com.cloudfiveapp.android.data.model.Product
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity
 import com.cloudfiveapp.android.util.extensions.toast
 import com.cloudfiveapp.android.util.extensions.visible

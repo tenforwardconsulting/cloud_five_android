@@ -7,9 +7,8 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.application.di.Injector
-import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel
-import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel.LoginViewState.*
+import com.cloudfiveapp.android.application.injection.Injector
+import com.cloudfiveapp.android.ui.login.LoginViewModel.LoginViewState.*
 import com.cloudfiveapp.android.util.CloudAnimator
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard

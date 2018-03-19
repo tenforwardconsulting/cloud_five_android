@@ -3,10 +3,10 @@ package com.cloudfiveapp.android.application
 import android.app.Application
 import android.os.StrictMode
 import com.cloudfiveapp.android.BuildConfig
-import com.cloudfiveapp.android.application.di.AppComponent
-import com.cloudfiveapp.android.application.di.AppModule
-import com.cloudfiveapp.android.application.di.DaggerAppComponent
-import com.cloudfiveapp.android.application.di.NetworkModule
+import com.cloudfiveapp.android.application.injection.AppComponent
+import com.cloudfiveapp.android.application.injection.AppModule
+import com.cloudfiveapp.android.application.injection.DaggerAppComponent
+import com.cloudfiveapp.android.application.injection.NetworkModule
 import com.facebook.stetho.Stetho
 import io.reactivex.Completable
 import io.reactivex.schedulers.Schedulers

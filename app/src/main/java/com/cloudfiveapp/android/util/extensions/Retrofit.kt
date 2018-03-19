@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.util.extensions
 
-import com.cloudfiveapp.android.ui.common.networking.ApiErrorConverter
-import com.cloudfiveapp.android.ui.common.networking.Outcome
+import com.cloudfiveapp.android.data.ApiErrorConverter
+import com.cloudfiveapp.android.data.model.Outcome
 import java.io.IOException
 
 /**
