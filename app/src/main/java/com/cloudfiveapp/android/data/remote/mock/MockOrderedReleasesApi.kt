@@ -2,8 +2,7 @@ package com.cloudfiveapp.android.data.remote.mock
 
 import com.cloudfiveapp.android.data.model.Release
 import com.cloudfiveapp.android.data.remote.ReleasesApi
-import io.reactivex.Single
-import retrofit2.adapter.rxjava2.Result
+import retrofit2.Call
 import retrofit2.mock.BehaviorDelegate
 
 class MockOrderedReleasesApi(private val delegate: BehaviorDelegate<ReleasesApi>)
@@ -29,7 +28,7 @@ class MockOrderedReleasesApi(private val delegate: BehaviorDelegate<ReleasesApi>
                 emptyList())
     }
 
-    override fun getReleases(productId: String): Single<Result<List<Release>>> {
+    override fun getReleases(productId: String): Call<List<Release>> {
         val currentCallIndex = timesCalled
         timesCalled = (timesCalled + 1) % orderedReleases.size
         return delegate.returningResponse(orderedReleases[currentCallIndex]).getReleases(productId)

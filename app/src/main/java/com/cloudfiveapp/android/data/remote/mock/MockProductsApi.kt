@@ -2,8 +2,7 @@ package com.cloudfiveapp.android.data.remote.mock
 
 import com.cloudfiveapp.android.data.model.Product
 import com.cloudfiveapp.android.data.remote.ProductsApi
-import io.reactivex.Single
-import retrofit2.adapter.rxjava2.Result
+import retrofit2.Call
 import retrofit2.mock.BehaviorDelegate
 
 class MockProductsApi(private val delegate: BehaviorDelegate<ProductsApi>)
@@ -18,7 +17,7 @@ class MockProductsApi(private val delegate: BehaviorDelegate<ProductsApi>)
                 Product("4", "Cloud Five App", "3", "Cloud Five Apps"))
     }
 
-    override fun getProducts(): Single<Result<List<Product>>> {
+    override fun getProducts(): Call<List<Product>> {
         return delegate.returningResponse(products).getProducts()
     }
 }

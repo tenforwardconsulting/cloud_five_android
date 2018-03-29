@@ -2,36 +2,44 @@ package com.cloudfiveapp.android.util.extensions
 
 import com.cloudfiveapp.android.data.ApiErrorConverter
 import com.cloudfiveapp.android.data.model.Outcome
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 
 /**
- * Does a bunch of stuff to convert a Retrofit/RxJava
- * [Outcome][retrofit2.adapter.rxjava2.Result] to a CloudFiveApp [Outcome]
+ * Convert this [Response] to an [Outcome].
  */
-fun <T> retrofit2.adapter.rxjava2.Result<T>.toResult(errorConverter: ApiErrorConverter): Outcome<T> {
-    return if (isError) {
-        Outcome.error(error())
+fun <T> Response<T>.toOutcome(errorConverter: ApiErrorConverter): Outcome<T> {
+    val body = body()
+    return if (isSuccessful && body != null) {
+        Outcome.success(body)
     } else {
-        val response = response()
-        if (response != null) {
-            val data = response.body()
-            if (response.isSuccessful && data != null) {
-                Outcome.success(data)
-            } else {
-                val errorBody = response.errorBody()
-                if (errorBody != null) {
-                    try {
-                        val message = errorConverter.convert(errorBody).message
-                        Outcome.error<T>(null, message)
-                    } catch (e: IOException) {
-                        Outcome.error<T>(e)
-                    }
-                } else {
-                    Outcome.error(message = "errorBody was null")
-                }
+        val errorBody = errorBody()
+        if (errorBody != null) {
+            try {
+                val message = errorConverter.convert(errorBody).message
+                Outcome.error<T>(null, message)
+            } catch (ioEx: IOException) {
+                Outcome.error<T>(ioEx)
             }
         } else {
-            Outcome.error(message = "Not error and response == null")
+            // TODO: Report this to rollbar because I think this can't actually happen
+            // One of body() or errorBody() must be non-null
+            Outcome.error(message = "errorBody was null")
         }
     }
+}
+
+fun <T> Call<T>.enqueue(success: (response: Response<T>) -> Unit,
+                        failure: (t: Throwable) -> Unit) {
+    enqueue(object : Callback<T> {
+        override fun onResponse(call: Call<T>, response: Response<T>) {
+            success(response)
+        }
+
+        override fun onFailure(call: Call<T>, t: Throwable) {
+            failure(t)
+        }
+    })
 }
