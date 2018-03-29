@@ -3,11 +3,13 @@ package com.cloudfiveapp.android.ui.login
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.cloudfiveapp.android.data.remote.LoginApi
 import com.cloudfiveapp.android.data.model.LoginRequest
-import com.cloudfiveapp.android.ui.login.viewmodel.LoginViewModel.LoginViewState.*
+import com.cloudfiveapp.android.data.remote.LoginApi
+import com.cloudfiveapp.android.ui.login.LoginViewModel.LoginViewState.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
