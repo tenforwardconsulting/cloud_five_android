@@ -8,11 +8,12 @@ import android.view.inputmethod.EditorInfo
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
-import com.cloudfiveapp.android.ui.login.LoginViewModel.LoginViewState.*
+import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.util.CloudAnimator
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard
 import com.cloudfiveapp.android.util.extensions.toast
+import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 
@@ -39,28 +40,28 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun bindToViewModel() {
-        viewModel.loginViewState.observe(this, Observer { loginViewState ->
-            Timber.d("$loginViewState")
-            when (loginViewState) {
-                is Loading -> {
+        viewModel.loginViewState.observe(this, Observer { outcome ->
+            Timber.d("$outcome")
+            when (outcome) {
+                is Outcome.Loading -> {
                     disableInputs()
                     loginEmailTextInputLayout.error = null
                     loginPasswordTextInputLayout.error = null
                 }
-                is LoggedIn -> {
+                is Outcome.Success -> {
                     toast("Login success!")
                     enableInputs()
                     finish()
                 }
-                is InvalidCredentials -> {
-                    loginEmailTextInputLayout.error = loginViewState.message
-                    loginPasswordTextInputLayout.error = loginViewState.message
+                is Outcome.Error -> {
+                    if (!outcome.message.isNullOrEmpty()) {
+                        loginEmailTextInputLayout.error = outcome.message
+                        loginPasswordTextInputLayout.error = outcome.message
+                    } else {
+                        toastNetworkError(outcome.error?.message)
+                    }
                     enableInputs()
                     loginEmailInput.showKeyboard()
-                }
-                is NetworkError -> {
-                    toast("Network error")
-                    enableInputs()
                 }
             }
         })

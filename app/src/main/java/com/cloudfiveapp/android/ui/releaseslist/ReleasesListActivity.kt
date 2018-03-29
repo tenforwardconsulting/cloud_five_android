@@ -23,6 +23,7 @@ import com.cloudfiveapp.android.data.model.Release
 import com.cloudfiveapp.android.ui.releaseslist.ApkDownloader.DownloadEvent.DownloadCompleted
 import com.cloudfiveapp.android.ui.releaseslist.ApkDownloader.DownloadEvent.DownloadStarted
 import com.cloudfiveapp.android.util.extensions.toast
+import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -126,9 +127,7 @@ class ReleasesListActivity
                     releasesEmptyText.visible(outcome.data.isEmpty())
                 }
                 is Outcome.Error -> {
-                    // TODO: Betterify this
-                    toast(outcome.message ?: outcome.error?.message
-                    ?: "Network error", Toast.LENGTH_LONG)
+                    toastNetworkError(outcome.message ?: outcome.error?.message)
                 }
             }
         })

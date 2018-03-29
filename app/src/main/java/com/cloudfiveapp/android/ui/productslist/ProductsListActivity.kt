@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
@@ -13,6 +12,7 @@ import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Product
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity
 import com.cloudfiveapp.android.util.extensions.toast
+import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
 import kotlinx.android.synthetic.main.activity_products.*
 
@@ -57,9 +57,7 @@ class ProductsListActivity
                     adapter.submitList(outcome.data)
                 }
                 is Outcome.Error -> {
-                    // TODO: Betterify this
-                    toast(outcome.message ?: outcome.error?.message
-                    ?: "Network error", Toast.LENGTH_LONG)
+                    toastNetworkError(outcome.message ?: outcome.error?.message)
                 }
             }
             productsEmptyText.visible(adapter.itemCount == 0)

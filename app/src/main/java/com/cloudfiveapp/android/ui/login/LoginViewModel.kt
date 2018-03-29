@@ -3,73 +3,33 @@ package com.cloudfiveapp.android.ui.login
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.cloudfiveapp.android.data.ApiErrorConverter
 import com.cloudfiveapp.android.data.model.LoginRequest
+import com.cloudfiveapp.android.data.model.LoginResponse
+import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.remote.LoginApi
-import com.cloudfiveapp.android.ui.login.LoginViewModel.LoginViewState.*
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import com.cloudfiveapp.android.util.extensions.enqueue
+import com.cloudfiveapp.android.util.extensions.toOutcome
 
-class LoginViewModel(private val loginApi: LoginApi)
+class LoginViewModel(private val loginApi: LoginApi,
+                     private val errorConverter: ApiErrorConverter)
     : ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
+    private val internal = MutableLiveData<Outcome<LoginResponse>>()
 
-    private val loginAttempts = PublishSubject.create<LoginRequest>()
-
-    val loginViewState: LiveData<LoginViewState> by lazy {
-        val data = MutableLiveData<LoginViewState>()
-        loginAttempts
-                .flatMap { loginRequest ->
-                    loginApi.login(loginRequest)
-                            .map { result ->
-                                val response = result.response()
-                                val error = result.error()
-
-                                if (error != null) {
-                                    NetworkError(error)
-                                } else if (response != null) {
-                                    val loginResponse = response.body()
-                                    if (response.isSuccessful && loginResponse != null) {
-                                        LoggedIn(loginResponse.authenticationToken)
-                                    } else {
-                                        // TODO: Get message from server
-                                        InvalidCredentials("Invalid email/password combination")
-                                    }
-                                } else {
-                                    throw UnknownError("result.response == null && result.error == null")
-                                }
-                            }
-                            .toObservable()
-                            .startWith(Loading)
-
-                }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy(
-                        onNext = { loginViewState ->
-                            data.value = loginViewState
-                        })
-                .addTo(compositeDisposable)
-        data
-    }
+    val loginViewState: LiveData<Outcome<LoginResponse>> = internal
 
     fun login(email: String, password: String) {
-        loginAttempts.onNext(LoginRequest(email, password))
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
-    }
-
-    sealed class LoginViewState {
-        object Loading : LoginViewState()
-        class LoggedIn(val authenticationToken: String) : LoginViewState()
-        class InvalidCredentials(val message: String) : LoginViewState()
-        class NetworkError(val throwable: Throwable?) : LoginViewState()
+        internal.value = Outcome.loading(true)
+        loginApi.login(LoginRequest(email, password))
+                .enqueue(
+                        success = { response ->
+                            internal.value = Outcome.loading(false)
+                            internal.value = response.toOutcome(errorConverter)
+                        },
+                        failure = {
+                            internal.value = Outcome.loading(false)
+                            internal.value = Outcome.error(it)
+                        })
     }
 }

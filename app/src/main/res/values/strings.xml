@@ -3,6 +3,7 @@
 
     <!--Misc-->
     <string name="recyclerview_linearlayoutmanager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
+    <string name="network_error_message">Network error</string>
 
     <!--Releases-->
     <string name="build_number_formatted">#%s</string>
@@ -13,4 +14,5 @@
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Password</string>
     <string name="login_button_log_in">Log In</string>
+
 </resources>
