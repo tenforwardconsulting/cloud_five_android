@@ -3,7 +3,6 @@ package com.cloudfiveapp.android.ui.releaseslist
 import android.Manifest
 import android.app.DownloadManager
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -13,7 +12,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
@@ -22,6 +20,7 @@ import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Release
 import com.cloudfiveapp.android.ui.releaseslist.ApkDownloader.DownloadEvent.DownloadCompleted
 import com.cloudfiveapp.android.ui.releaseslist.ApkDownloader.DownloadEvent.DownloadStarted
+import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.toast
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
@@ -47,7 +46,7 @@ class ReleasesListActivity
     private val viewModelFactory = Injector.get().releasesListViewModelFactory()
 
     private val viewModel by lazy {
-        ViewModelProviders.of(this, viewModelFactory).get(ReleasesListViewModel::class.java)
+        viewModelFactory.get(this, ReleasesListViewModel::class)
     }
 
     private val compositeDisposable = CompositeDisposable()
