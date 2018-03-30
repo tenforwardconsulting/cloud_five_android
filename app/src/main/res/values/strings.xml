@@ -4,6 +4,7 @@
     <!--Misc-->
     <string name="recyclerview_linearlayoutmanager" translatable="false">android.support.v7.widget.LinearLayoutManager</string>
     <string name="network_error_message">Network error</string>
+    <string name="snackbar_action_open">Open</string>
 
     <!--Releases-->
     <string name="build_number_formatted">#%s</string>

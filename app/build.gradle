@@ -95,18 +95,6 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     // endregion
 
-    // region RxJava
-    ext.rxJavaVersion = '2.1.0'
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxJavaVersion"
-
-    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
-
-    ext.rxBindingVersion = '2.0.0'
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rxBindingVersion"
-    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:$rxBindingVersion"
-    // endregion
-
     // region Net
     ext.retrofitVersion = '2.3.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"

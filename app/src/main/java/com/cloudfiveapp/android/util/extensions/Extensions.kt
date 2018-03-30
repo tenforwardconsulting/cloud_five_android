@@ -1,6 +1,5 @@
 package com.cloudfiveapp.android.util.extensions
 
-import android.app.DownloadManager
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -11,10 +10,6 @@ import kotlin.reflect.KClass
 
 fun String.toUri(): Uri {
     return Uri.parse(this)
-}
-
-fun DownloadManager.enqueue(uri: Uri, block: DownloadManager.Request.() -> Unit): Long {
-    return enqueue(DownloadManager.Request(uri).apply(block))
 }
 
 fun Random.nextFloatInRange(min: Float, max: Float): Float {
