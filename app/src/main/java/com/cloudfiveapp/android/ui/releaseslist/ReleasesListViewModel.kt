@@ -5,21 +5,13 @@ import android.arch.lifecycle.ViewModel
 import com.cloudfiveapp.android.data.ProductId
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Release
-import io.reactivex.disposables.CompositeDisposable
 
 class ReleasesListViewModel(private val releasesRepository: ReleasesListContract.Repository)
     : ViewModel() {
 
-    private val compositeDisposable = CompositeDisposable()
-
     private var productId: ProductId? = null
 
     val releases: LiveData<Outcome<List<Release>>> = releasesRepository.releasesOutcome
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
-    }
 
     fun getReleases(productId: ProductId) {
         if (this.productId != productId || releases.value == null) {
