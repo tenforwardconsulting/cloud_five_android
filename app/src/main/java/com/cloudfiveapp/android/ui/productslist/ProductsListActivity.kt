@@ -11,7 +11,6 @@ import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Product
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity
 import com.cloudfiveapp.android.util.extensions.get
-import com.cloudfiveapp.android.util.extensions.toast
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
 import kotlinx.android.synthetic.main.activity_products.*
@@ -67,9 +66,7 @@ class ProductsListActivity
     // region ProductsInteractor
 
     override fun onProductClick(product: Product) {
-        toast("Clicked on $product")
-        // TODO: pass in product ID
-        startActivity(ReleasesListActivity.newIntent(this))
+        startActivity(ReleasesListActivity.newIntent(this, product.id))
     }
 
     // endregion

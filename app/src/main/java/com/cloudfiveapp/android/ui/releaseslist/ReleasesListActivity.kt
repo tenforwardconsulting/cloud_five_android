@@ -15,6 +15,7 @@ import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
+import com.cloudfiveapp.android.data.ProductId
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Release
 import com.cloudfiveapp.android.util.extensions.get
@@ -31,9 +32,11 @@ class ReleasesListActivity
 
     companion object {
         private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
+        private const val EXTRA_PRODUCT_ID = "$EXTRA_PREFIX.product_id"
 
-        fun newIntent(context: Context): Intent {
+        fun newIntent(context: Context, productId: ProductId): Intent {
             return Intent(context, ReleasesListActivity::class.java)
+                    .putExtra(EXTRA_PRODUCT_ID, productId)
         }
     }
 
@@ -57,6 +60,8 @@ class ReleasesListActivity
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_releases_list)
 
+        val productId = getExtra<ProductId>(EXTRA_PRODUCT_ID) ?: return
+
         releasesAdapter.interactor = this
         releasesRecycler.adapter = releasesAdapter
 
@@ -65,7 +70,7 @@ class ReleasesListActivity
         }
 
         bindToViewModel()
-        viewModel.getReleases("hello")
+        viewModel.getReleases(productId)
     }
 
     override fun onResume() {
