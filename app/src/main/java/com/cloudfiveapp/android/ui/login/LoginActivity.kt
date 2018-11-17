@@ -1,10 +1,10 @@
 package com.cloudfiveapp.android.ui.login
 
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
+import androidx.lifecycle.Observer
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector

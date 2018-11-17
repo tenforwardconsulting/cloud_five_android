@@ -1,8 +1,8 @@
 package com.cloudfiveapp.android.ui.login
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.cloudfiveapp.android.data.ApiErrorConverter
 import com.cloudfiveapp.android.data.model.LoginRequest
 import com.cloudfiveapp.android.data.model.LoginResponse

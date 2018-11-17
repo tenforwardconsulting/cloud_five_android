@@ -1,8 +1,8 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.data.model.Release
 import com.cloudfiveapp.android.util.extensions.inflate

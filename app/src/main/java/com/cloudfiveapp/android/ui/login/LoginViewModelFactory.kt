@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.ui.login
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.cloudfiveapp.android.data.ApiErrorConverter
 import com.cloudfiveapp.android.data.remote.LoginApi
 import javax.inject.Inject

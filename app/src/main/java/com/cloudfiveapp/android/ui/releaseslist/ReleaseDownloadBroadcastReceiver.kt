@@ -5,8 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
@@ -14,6 +13,7 @@ import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.util.extensions.activitiesForIntent
 import com.cloudfiveapp.android.util.extensions.getInt
 import com.cloudfiveapp.android.util.extensions.getString
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
 class ReleaseDownloadBroadcastReceiver(private val snackbarTargetView: View,

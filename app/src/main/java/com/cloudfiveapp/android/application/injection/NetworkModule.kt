@@ -1,9 +1,7 @@
 package com.cloudfiveapp.android.application.injection
 
-import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.data.ApiErrorConverter
 import com.cloudfiveapp.android.data.model.ApiError
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -46,9 +44,6 @@ class NetworkModule(private val cache: Cache) {
     @Singleton
     fun providesOkHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder().cache(cache)
-        if (BuildConfig.DEBUG) {
-            client.addNetworkInterceptor(StethoInterceptor())
-        }
         return client.build()
     }
 

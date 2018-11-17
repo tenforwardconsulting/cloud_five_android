@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.data.model.Release
 import kotlinx.android.synthetic.main.row_release.view.*

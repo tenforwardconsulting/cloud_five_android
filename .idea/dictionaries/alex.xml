@@ -5,6 +5,7 @@
       <w>linearlayoutmanager</w>
       <w>moshi</w>
       <w>recyclerview</w>
+      <w>snackbar</w>
       <w>stetho</w>
     </words>
   </dictionary>

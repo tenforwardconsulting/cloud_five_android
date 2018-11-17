@@ -7,7 +7,6 @@ import com.cloudfiveapp.android.application.injection.AppComponent
 import com.cloudfiveapp.android.application.injection.AppModule
 import com.cloudfiveapp.android.application.injection.DaggerAppComponent
 import com.cloudfiveapp.android.application.injection.NetworkModule
-import com.facebook.stetho.Stetho
 import okhttp3.Cache
 import timber.log.Timber
 
@@ -21,7 +20,6 @@ class CloudFiveApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initDI()
-        initStetho()
         initStrictMode()
         initTimber()
     }
@@ -36,12 +34,6 @@ class CloudFiveApp : Application() {
                 .appModule(AppModule(this))
                 .networkModule(NetworkModule(cache))
                 .build()
-    }
-
-    private fun initStetho() {
-        if (BuildConfig.DEBUG) {
-            Stetho.initializeWithDefaults(this)
-        }
     }
 
     private fun initStrictMode() {
