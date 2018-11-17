@@ -53,7 +53,7 @@ class LoginActivity : BaseActivity() {
                 is Outcome.Success -> {
                     toast("Login success!")
                     enableInputs()
-                    SessionManager.loggedIn = true
+                    SessionManager.logIn("auth_token")
                     startActivity(MainActivity.newIntent(this))
                     finish()
                 }

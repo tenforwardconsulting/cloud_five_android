@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.cloudfiveapp.android.R
@@ -37,10 +36,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sessionViewModel = ViewModelProviders.of(this).get(SessionViewModel::class.java)
-
-        sessionViewModel.getSession().observe(this, Observer { loggedIn ->
-            if (!loggedIn) {
+        SessionManager.getSession().observe(this, Observer { session ->
+            if (session is Unauthenticated) {
                 finish()
                 startActivity(LoginActivity.newIntent(this))
             }
@@ -50,7 +47,7 @@ class MainActivity : BaseActivity() {
 
         mainToolbar.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.mainLogOut) {
-                SessionManager.loggedIn = false
+                SessionManager.logOut()
             }
             true
         }
@@ -73,5 +70,5 @@ class MainActivity : BaseActivity() {
         unregisterReceiver(releaseDownloadBroadcastReceiver)
     }
 
-    override fun onSupportNavigateUp() = navController.navigateUp()
+    override fun onSupportNavigateUp() = navController.navigateUp() || super.onSupportNavigateUp()
 }

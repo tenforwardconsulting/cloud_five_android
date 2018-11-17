@@ -1,27 +1,28 @@
 package com.cloudfiveapp.android.ui.main
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+
 object SessionManager {
 
-    private val sessionObservers = mutableListOf<SessionObserver>()
+    private val session = MutableLiveData<Session>()
 
-    var loggedIn: Boolean = false
-        set(value) {
-            sessionObservers.forEach {
-                it.onChanged(value)
-            }
-            field = value
-        }
-
-    fun addSessionObserver(observer: SessionObserver) {
-        sessionObservers.add(observer)
-        observer.onChanged(loggedIn)
+    fun getSession(): LiveData<Session> {
+        return session
     }
 
-    fun removeSessionObserver(observer: SessionObserver) {
-        sessionObservers.remove(observer)
+    fun logIn(authToken: String) {
+        session.postValue(Authenticated(authToken))
+    }
+
+    fun logOut() {
+        session.postValue(Unauthenticated)
     }
 }
 
-interface SessionObserver {
-    fun onChanged(loggedIn: Boolean)
-}
+sealed class Session
+
+object Unauthenticated : Session()
+
+data class Authenticated(val authToken: String) : Session()
+
