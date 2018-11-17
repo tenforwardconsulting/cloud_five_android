@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cloudfiveapp.android.R
@@ -57,20 +56,13 @@ class MainActivity : BaseActivity() {
             true
         }
 
-        val navHost = NavHostFragment.create(R.navigation.nav_graph)
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.navHostFragment, navHost)
-                .setPrimaryNavigationFragment(navHost)
-                .runOnCommit {
-                    val appBarConfiguration = AppBarConfiguration(navController.graph)
-                    mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        mainToolbar.setupWithNavController(navController, appBarConfiguration)
 
-                    navController.addOnNavigatedListener { _, destination ->
-                        mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
-                                destination.id == R.id.productsListFragment
-                    }
-                }
-                .commit()
+        navController.addOnNavigatedListener { _, destination ->
+            mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
+                    destination.id == R.id.productsListFragment
+        }
     }
 
     override fun onResume() {
