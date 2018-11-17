@@ -6,12 +6,12 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.cloudfiveapp.android.BaseTest
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.util.hasTextInputLayoutError
-import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.not
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
