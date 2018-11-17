@@ -8,7 +8,6 @@ import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
@@ -56,8 +55,7 @@ class MainActivity : BaseActivity() {
             true
         }
 
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
-        mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        mainToolbar.setupWithNavController(navController)
 
         navController.addOnNavigatedListener { _, destination ->
             mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
