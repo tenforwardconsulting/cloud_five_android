@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs"
 
 androidExtensions {
     experimental = true
@@ -83,6 +84,10 @@ dependencies {
     // region Arch Components
     ext.architectureComponentsVersion = '1.1.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+
+    def nav_version = "1.0.0-alpha07"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
     // endregion
 
     // region Material UI

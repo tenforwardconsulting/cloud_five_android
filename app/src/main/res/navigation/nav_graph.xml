@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/productsListFragment">
+
+    <fragment
+        android:id="@+id/productsListFragment"
+        android:name="com.cloudfiveapp.android.ui.productslist.ProductsListFragment"
+        android:label="ProductsListFragment">
+
+        <action
+            android:id="@+id/action_productsListFragment_to_releasesListFragment"
+            app:destination="@id/releasesListFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/releasesListFragment"
+        android:name="com.cloudfiveapp.android.ui.releaseslist.ReleasesListFragment"
+        android:label="ReleasesListFragment">
+
+        <argument
+            android:name="productId"
+            app:argType="string" />
+
+    </fragment>
+
+</navigation>

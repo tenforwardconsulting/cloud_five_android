@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseFragment
 import com.cloudfiveapp.android.application.injection.Injector
@@ -18,12 +19,6 @@ import kotlinx.android.synthetic.main.fragment_products_list.view.*
 class ProductsListFragment
     : BaseFragment(),
       ProductsInteractor {
-
-    companion object {
-        fun newInstance(): ProductsListFragment {
-            return ProductsListFragment()
-        }
-    }
 
     private val adapter = ProductsAdapter()
 
@@ -75,8 +70,9 @@ class ProductsListFragment
     // region ProductsInteractor
 
     override fun onProductClick(product: Product) {
-        // TODO: handle
-        //        startActivity(ReleasesListActivity.newIntent(this, product.id))
+        val action = ProductsListFragmentDirections
+                .actionProductsListFragmentToReleasesListFragment(product.id)
+        view?.findNavController()?.navigate(action)
     }
 
     // endregion
