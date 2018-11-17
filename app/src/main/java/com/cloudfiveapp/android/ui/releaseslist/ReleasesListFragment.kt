@@ -76,7 +76,7 @@ class ReleasesListFragment
         super.onActivityCreated(savedInstanceState)
 
         val viewModelFactory = Injector.get().releasesListViewModelFactory()
-        val viewModel = viewModelFactory.get(requireActivity(), ReleasesListViewModel::class)
+        val viewModel = viewModelFactory.get(this, ReleasesListViewModel::class)
 
         bindToViewModel(viewModel)
     }
