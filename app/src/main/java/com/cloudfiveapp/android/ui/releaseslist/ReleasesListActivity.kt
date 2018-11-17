@@ -1,52 +1,27 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
-import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
-import com.afollestad.materialdialogs.MaterialDialog
-import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
-import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.ProductId
-import com.cloudfiveapp.android.data.model.Outcome
-import com.cloudfiveapp.android.data.model.Release
-import com.cloudfiveapp.android.util.extensions.get
-import com.cloudfiveapp.android.util.extensions.toUri
-import com.cloudfiveapp.android.util.extensions.toastNetworkError
-import com.cloudfiveapp.android.util.extensions.visible
 import kotlinx.android.synthetic.main.activity_releases_list.*
-import timber.log.Timber
-import java.io.File
 
 class ReleasesListActivity
-    : BaseActivity(),
-      ReleaseInteractor {
+    : BaseActivity() {
 
     companion object {
-        private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
         private const val EXTRA_PRODUCT_ID = "$EXTRA_PREFIX.product_id"
+        private const val FRAG_TAG_RELEASES_LIST = "FRAG_TAG_RELEASES_LIST"
 
         fun newIntent(context: Context, productId: ProductId): Intent {
             return Intent(context, ReleasesListActivity::class.java)
                     .putExtra(EXTRA_PRODUCT_ID, productId)
         }
     }
-
-    private val viewModelFactory = Injector.get().releasesListViewModelFactory()
-
-    private val viewModel by lazy {
-        viewModelFactory.get(this, ReleasesListViewModel::class)
-    }
-
-    private val releasesAdapter = ReleasesAdapter()
 
     private val downloadManager: DownloadManager by lazy {
         getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -62,15 +37,12 @@ class ReleasesListActivity
 
         val productId = getExtra<ProductId>(EXTRA_PRODUCT_ID) ?: return
 
-        releasesAdapter.interactor = this
-        releasesRecycler.adapter = releasesAdapter
-
-        releasesSwipeRefresh.setOnRefreshListener {
-            viewModel.refreshReleases()
+        if (savedInstanceState == null) {
+            val fragment = ReleasesListFragment.newInstance(productId)
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.releasesContainer, fragment, FRAG_TAG_RELEASES_LIST)
+                    .commit()
         }
-
-        bindToViewModel()
-        viewModel.getReleases(productId)
     }
 
     override fun onResume() {
@@ -81,87 +53,5 @@ class ReleasesListActivity
     override fun onPause() {
         super.onPause()
         unregisterReceiver(releaseDownloadBroadcastReceiver)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // try again
-                // https://github.com/mozilla-mobile/focus-android/blob/1f1fde04f8db64742cb9f985c9db7264b76df3b5/app/src/main/java/org/mozilla/focus/fragment/BrowserFragment.java#L710
-            } else {
-                // denied
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-    }
-
-    // region ReleaseInteractor
-
-    override fun onDownloadClicked(release: Release) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestWriteExternalStoragePermission()
-            return
-        }
-        enqueueReleaseDownload(release)
-    }
-
-    private fun enqueueReleaseDownload(release: Release) {
-        val request = DownloadManager.Request(release.downloadUrl.toUri()).apply {
-
-            val destination = "${File.separator}cloud_five${File.separator}${release.downloadFileName}"
-            try {
-                setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destination)
-            } catch (e: IllegalStateException) {
-                Timber.e(e, "Unable to set download destination")
-                return
-            }
-            val allowedNetworkTypes = if (BuildConfig.DEBUG) {
-                // Allow mobile in debug so emulators can download.
-                DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
-            } else {
-                DownloadManager.Request.NETWORK_WIFI
-            }
-            setAllowedNetworkTypes(allowedNetworkTypes)
-            setTitle("${release.name} Download")
-            setDescription("${release.version} - ${release.latestBuildNumber} - ${release.commitHash}")
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-        }
-
-        downloadManager.enqueue(request)
-    }
-
-    // endregion
-
-    private fun bindToViewModel() {
-        viewModel.releases.observe(this, Observer { outcome ->
-            Timber.d("outcome: $outcome")
-            when (outcome) {
-                is Outcome.Loading -> {
-                    releasesSwipeRefresh.isRefreshing = outcome.loading
-                }
-                is Outcome.Success -> {
-                    releasesAdapter.submitList(outcome.data)
-                    releasesEmptyText.visible(outcome.data.isEmpty())
-                }
-                is Outcome.Error -> {
-                    toastNetworkError(outcome.message ?: outcome.error?.message)
-                }
-            }
-        })
-    }
-
-    private fun requestWriteExternalStoragePermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            MaterialDialog(this)
-                    .message(R.string.dialog_message_write_storage_permission_rationale)
-                    .negativeButton(android.R.string.cancel)
-                    .positiveButton(android.R.string.ok) {
-                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE)
-                    }
-                    .show()
-        } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE)
-        }
     }
 }
