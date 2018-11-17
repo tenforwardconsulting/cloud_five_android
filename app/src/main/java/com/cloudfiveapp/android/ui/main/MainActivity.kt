@@ -39,6 +39,17 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mainToolbar.inflateMenu(R.menu.main)
+
+        mainToolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.mainLogOut) {
+                loggedIn = false
+                startActivity(LoginActivity.newIntent(this))
+                finish()
+            }
+            true
+        }
+
         if (!loggedIn) {
             startActivity(LoginActivity.newIntent(this))
             finish()
@@ -50,6 +61,11 @@ class MainActivity : BaseActivity() {
                     .runOnCommit {
                         val appBarConfiguration = AppBarConfiguration(navController.graph)
                         mainToolbar.setupWithNavController(navController, appBarConfiguration)
+
+                        navController.addOnNavigatedListener { _, destination ->
+                            mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
+                                    destination.id == R.id.productsListFragment
+                        }
                     }
                     .commit()
         }
