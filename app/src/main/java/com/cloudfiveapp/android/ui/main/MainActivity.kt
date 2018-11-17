@@ -7,7 +7,7 @@ import android.os.Bundle
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.ui.login.LoginActivity
-import com.cloudfiveapp.android.ui.productslist.ProductsListActivity
+import com.cloudfiveapp.android.ui.productslist.ProductsListFragment
 import com.cloudfiveapp.android.ui.releaseslist.ReleaseDownloadBroadcastReceiver
 import com.cloudfiveapp.android.ui.releaseslist.ReleasesListFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,6 +17,7 @@ class MainActivity : BaseActivity() {
     companion object {
         private val TAG = "MainActivity"
 
+        private const val FRAG_TAG_PRODUCTS_LIST = "FRAG_TAG_PRODUCTS_LIST"
         private const val FRAG_TAG_RELEASES_LIST = "FRAG_TAG_RELEASES_LIST"
     }
 
@@ -37,7 +38,11 @@ class MainActivity : BaseActivity() {
         }
 
         mainProductsButton.setOnClickListener {
-            startActivity(ProductsListActivity.newIntent(this))
+            val fragment = ProductsListFragment.newInstance()
+            supportFragmentManager.beginTransaction()
+                    .add(R.id.mainContent, fragment, FRAG_TAG_PRODUCTS_LIST)
+                    .addToBackStack("products_list")
+                    .commit()
         }
 
         mainReleasesButton.setOnClickListener {
