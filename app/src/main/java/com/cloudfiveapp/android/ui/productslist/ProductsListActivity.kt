@@ -1,15 +1,14 @@
 package com.cloudfiveapp.android.ui.productslist
 
-import androidx.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Product
-import com.cloudfiveapp.android.ui.releaseslist.ReleasesListActivity
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
@@ -66,7 +65,8 @@ class ProductsListActivity
     // region ProductsInteractor
 
     override fun onProductClick(product: Product) {
-        startActivity(ReleasesListActivity.newIntent(this, product.id))
+        // TODO: handle
+        //        startActivity(ReleasesListActivity.newIntent(this, product.id))
     }
 
     // endregion

@@ -20,38 +20,45 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <FrameLayout
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/mainLoginButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Login Screen" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/mainProductsButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Products Screen" />
+                <Button
+                    android:id="@+id/mainLoginButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Login Screen" />
 
-            <Button
-                android:id="@+id/mainReleasesButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Releases Screen" />
+                <Button
+                    android:id="@+id/mainProductsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Products Screen" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/mainReleasesButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Releases Screen" />
 
-    </ScrollView>
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
