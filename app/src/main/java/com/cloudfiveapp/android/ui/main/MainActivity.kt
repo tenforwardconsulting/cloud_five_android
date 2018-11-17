@@ -2,23 +2,24 @@ package com.cloudfiveapp.android.ui.main
 
 import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.ui.login.LoginActivity
-import com.cloudfiveapp.android.ui.productslist.ProductsListFragment
 import com.cloudfiveapp.android.ui.releaseslist.ReleaseDownloadBroadcastReceiver
-import com.cloudfiveapp.android.ui.releaseslist.ReleasesListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
 
     companion object {
-        private val TAG = "MainActivity"
-
-        private const val FRAG_TAG_PRODUCTS_LIST = "FRAG_TAG_PRODUCTS_LIST"
-        private const val FRAG_TAG_RELEASES_LIST = "FRAG_TAG_RELEASES_LIST"
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
     }
 
     private val downloadManager: DownloadManager by lazy {
@@ -29,28 +30,33 @@ class MainActivity : BaseActivity() {
         ReleaseDownloadBroadcastReceiver(mainRootView, this, downloadManager)
     }
 
+    private val navController by lazy { findNavController(R.id.navHostFragment) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainLoginButton.setOnClickListener {
-            startActivity(LoginActivity.newIntent(this))
+        SessionManager.getSession().observe(this, Observer { session ->
+            if (session is Unauthenticated) {
+                finish()
+                startActivity(LoginActivity.newIntent(this))
+            }
+        })
+
+        mainToolbar.inflateMenu(R.menu.main)
+
+        mainToolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.mainLogOut) {
+                SessionManager.logOut()
+            }
+            true
         }
 
-        mainProductsButton.setOnClickListener {
-            val fragment = ProductsListFragment.newInstance()
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.mainContent, fragment, FRAG_TAG_PRODUCTS_LIST)
-                    .addToBackStack("products_list")
-                    .commit()
-        }
+        mainToolbar.setupWithNavController(navController)
 
-        mainReleasesButton.setOnClickListener {
-            val fragment = ReleasesListFragment.newInstance("fake_id")
-            supportFragmentManager.beginTransaction()
-                    .add(R.id.mainContent, fragment, FRAG_TAG_RELEASES_LIST)
-                    .addToBackStack("releases_list")
-                    .commit()
+        navController.addOnNavigatedListener { _, destination ->
+            mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
+                    destination.id == R.id.productsListFragment
         }
     }
 
@@ -63,4 +69,6 @@ class MainActivity : BaseActivity() {
         super.onPause()
         unregisterReceiver(releaseDownloadBroadcastReceiver)
     }
+
+    override fun onSupportNavigateUp() = navController.navigateUp() || super.onSupportNavigateUp()
 }

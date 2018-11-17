@@ -40,6 +40,7 @@ class CloudFiveApp : Application() {
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
                     .detectAll()
+                    .permitDiskReads()
                     .penaltyLog()
                     .build())
             StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()

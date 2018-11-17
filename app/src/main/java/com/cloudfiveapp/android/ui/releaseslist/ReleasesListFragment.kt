@@ -27,22 +27,11 @@ import kotlinx.android.synthetic.main.fragment_releases_list.view.*
 import timber.log.Timber
 import java.io.File
 
+private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
+
 class ReleasesListFragment
     : BaseFragment(),
       ReleaseInteractor {
-
-    companion object {
-        private const val REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 100
-        private const val EXTRA_PRODUCT_ID = "EXTRA_PRODUCT_ID"
-
-        fun newInstance(productId: ProductId): ReleasesListFragment {
-            return ReleasesListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(EXTRA_PRODUCT_ID, productId)
-                }
-            }
-        }
-    }
 
     private val downloadManager: DownloadManager by lazy {
         getSystemService(requireContext(), DownloadManager::class.java) as DownloadManager
@@ -56,10 +45,7 @@ class ReleasesListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        productId = arguments?.getString(EXTRA_PRODUCT_ID)
-                ?: throw IllegalArgumentException("$EXTRA_PRODUCT_ID was missing")
-
+        productId = ReleasesListFragmentArgs.fromBundle(arguments).productId
         releasesAdapter.interactor = this
     }
 
@@ -74,10 +60,8 @@ class ReleasesListFragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         val viewModelFactory = Injector.get().releasesListViewModelFactory()
         val viewModel = viewModelFactory.get(this, ReleasesListViewModel::class)
-
         bindToViewModel(viewModel)
     }
 
