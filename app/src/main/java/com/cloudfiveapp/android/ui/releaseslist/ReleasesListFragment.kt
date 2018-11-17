@@ -50,6 +50,8 @@ class ReleasesListFragment
 
     private val releasesAdapter = ReleasesAdapter()
 
+    private var releaseToDownload: Release? = null
+
     private lateinit var productId: ProductId
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,19 +61,6 @@ class ReleasesListFragment
                 ?: throw IllegalArgumentException("$EXTRA_PRODUCT_ID was missing")
 
         releasesAdapter.interactor = this
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // try again
-                // https://github.com/mozilla-mobile/focus-android/blob/1f1fde04f8db64742cb9f985c9db7264b76df3b5/app/src/main/java/org/mozilla/focus/fragment/BrowserFragment.java#L710
-            } else {
-                // denied
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -121,10 +110,26 @@ class ReleasesListFragment
 
     override fun onDownloadClicked(release: Release) {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            releaseToDownload = release
             requestWriteExternalStoragePermission()
             return
         }
         enqueueReleaseDownload(release)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // try again
+                // https://github.com/mozilla-mobile/focus-android/blob/1f1fde04f8db64742cb9f985c9db7264b76df3b5/app/src/main/java/org/mozilla/focus/fragment/BrowserFragment.java#L710
+                releaseToDownload?.let(this::enqueueReleaseDownload)
+                releaseToDownload = null
+            } else {
+                // denied
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
     }
 
     private fun enqueueReleaseDownload(release: Release) {
