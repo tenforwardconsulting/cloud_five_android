@@ -1,8 +1,8 @@
 package com.cloudfiveapp.android.util
 
 import android.support.design.widget.TextInputLayout
-import android.support.test.espresso.matcher.BoundedMatcher
-import android.support.v7.widget.RecyclerView
+import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.appcompat.widget.RecyclerView
 import android.view.View
 import org.hamcrest.Description
 import org.hamcrest.Matcher

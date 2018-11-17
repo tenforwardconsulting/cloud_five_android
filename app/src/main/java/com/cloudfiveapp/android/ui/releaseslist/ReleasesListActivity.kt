@@ -2,14 +2,14 @@ package com.cloudfiveapp.android.ui.releaseslist
 
 import android.Manifest
 import android.app.DownloadManager
-import android.arch.lifecycle.Observer
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudfiveapp.android.BuildConfig
 import com.cloudfiveapp.android.R
@@ -153,11 +153,10 @@ class ReleasesListActivity
 
     private fun requestWriteExternalStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            MaterialDialog.Builder(this)
-                    .content("")
-                    .positiveText(android.R.string.ok)
-                    .negativeText(android.R.string.cancel)
-                    .onPositive { _, _ ->
+            MaterialDialog(this)
+                    .message(R.string.dialog_message_write_storage_permission_rationale)
+                    .negativeButton(android.R.string.cancel)
+                    .positiveButton(android.R.string.ok) {
                         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE)
                     }
                     .show()

@@ -1,6 +1,6 @@
 package com.cloudfiveapp.android.ui.productslist
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Product
 

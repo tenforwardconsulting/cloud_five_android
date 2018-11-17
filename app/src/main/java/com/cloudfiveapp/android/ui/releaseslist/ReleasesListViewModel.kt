@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.cloudfiveapp.android.data.ProductId
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Release

@@ -1,7 +1,7 @@
 package com.cloudfiveapp.android.ui.productslist
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.cloudfiveapp.android.data.model.Product
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_product.view.*
