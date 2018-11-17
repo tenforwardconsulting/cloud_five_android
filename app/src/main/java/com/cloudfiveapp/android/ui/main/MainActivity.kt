@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,8 +20,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : BaseActivity() {
 
     companion object {
-        var loggedIn = false
-
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)
         }
@@ -39,36 +39,38 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sessionViewModel = ViewModelProviders.of(this).get(SessionViewModel::class.java)
+
+        sessionViewModel.getSession().observe(this, Observer { loggedIn ->
+            if (!loggedIn) {
+                finish()
+                startActivity(LoginActivity.newIntent(this))
+            }
+        })
+
         mainToolbar.inflateMenu(R.menu.main)
 
         mainToolbar.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.mainLogOut) {
-                loggedIn = false
-                startActivity(LoginActivity.newIntent(this))
-                finish()
+                SessionManager.loggedIn = false
             }
             true
         }
 
-        if (!loggedIn) {
-            startActivity(LoginActivity.newIntent(this))
-            finish()
-        } else {
-            val navHost = NavHostFragment.create(R.navigation.nav_graph)
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.navHostFragment, navHost)
-                    .setPrimaryNavigationFragment(navHost)
-                    .runOnCommit {
-                        val appBarConfiguration = AppBarConfiguration(navController.graph)
-                        mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        val navHost = NavHostFragment.create(R.navigation.nav_graph)
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.navHostFragment, navHost)
+                .setPrimaryNavigationFragment(navHost)
+                .runOnCommit {
+                    val appBarConfiguration = AppBarConfiguration(navController.graph)
+                    mainToolbar.setupWithNavController(navController, appBarConfiguration)
 
-                        navController.addOnNavigatedListener { _, destination ->
-                            mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
-                                    destination.id == R.id.productsListFragment
-                        }
+                    navController.addOnNavigatedListener { _, destination ->
+                        mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
+                                destination.id == R.id.productsListFragment
                     }
-                    .commit()
-        }
+                }
+                .commit()
     }
 
     override fun onResume() {

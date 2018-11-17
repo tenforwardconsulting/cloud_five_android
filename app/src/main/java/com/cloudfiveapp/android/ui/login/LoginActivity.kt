@@ -10,6 +10,7 @@ import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.ui.main.MainActivity
+import com.cloudfiveapp.android.ui.main.SessionManager
 import com.cloudfiveapp.android.util.CloudAnimator
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard
@@ -52,7 +53,7 @@ class LoginActivity : BaseActivity() {
                 is Outcome.Success -> {
                     toast("Login success!")
                     enableInputs()
-                    MainActivity.loggedIn = true
+                    SessionManager.loggedIn = true
                     startActivity(MainActivity.newIntent(this))
                     finish()
                 }
