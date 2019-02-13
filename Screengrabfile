@@ -1,0 +1,15 @@
+app_package_name 'com.cloudfiveapp.android'
+
+use_tests_in_packages ['com.cloudfiveapp.android.screenshots']
+
+app_apk_path 'app/build/outputs/apk/dev/debug/app-dev-debug.apk'
+tests_apk_path 'app/build/outputs/apk/androidTest/dev/debug/app-dev-debug-androidTest.apk'
+
+reinstall_app true
+
+clear_previous_screenshots true
+
+launch_arguments([
+    "username username",
+    "password password"
+])
