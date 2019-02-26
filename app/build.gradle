@@ -38,6 +38,8 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        ext.cloudfivedev = "true"
+        buildConfigField 'String', 'GCM_SENDER_ID', '""'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -119,4 +121,8 @@ dependencies {
     // region Debug
     implementation "com.jakewharton.timber:timber:4.7.0"
     // endregion
+
+    implementation('com.cloudfiveapp:push-android:0.11.0') {
+        exclude group: 'com.google.android.gms'
+    }
 }

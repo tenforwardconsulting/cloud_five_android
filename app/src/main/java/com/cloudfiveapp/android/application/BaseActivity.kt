@@ -2,6 +2,8 @@ package com.cloudfiveapp.android.application
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.cloudfiveapp.android.BuildConfig
+import com.cloudfiveapp.push.CloudFivePush
 import timber.log.Timber
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -12,6 +14,8 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        CloudFivePush.configure(this, BuildConfig.GCM_SENDER_ID)
 
         //        if (this::class != LoginActivity::class) {
         //            val rootView = findViewById<ViewGroup>(android.R.id.content)
