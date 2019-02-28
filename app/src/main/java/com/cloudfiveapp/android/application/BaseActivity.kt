@@ -15,7 +15,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CloudFivePush.configure(this, BuildConfig.GCM_SENDER_ID)
+        CloudFivePush.configure(this, BuildConfig.GCM_SENDER_ID, true)
         CloudFivePush.register()
 
         //        if (this::class != LoginActivity::class) {
