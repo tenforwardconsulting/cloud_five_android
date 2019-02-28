@@ -16,6 +16,7 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         CloudFivePush.configure(this, BuildConfig.GCM_SENDER_ID)
+        CloudFivePush.register()
 
         //        if (this::class != LoginActivity::class) {
         //            val rootView = findViewById<ViewGroup>(android.R.id.content)
