@@ -20,6 +20,7 @@ if (file('my.gradle').exists()) {
 
 android {
     compileSdkVersion 28
+    useLibrary 'org.apache.http.legacy'
 
     if (keystorePropertiesFile.exists()) {
         signingConfigs {
@@ -39,7 +40,7 @@ android {
         versionCode 1
         versionName "1.0"
         ext.cloudfivedev = "true"
-        buildConfigField 'String', 'GCM_SENDER_ID', '""'
+        buildConfigField 'String', 'GCM_SENDER_ID', '"25943271944"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
