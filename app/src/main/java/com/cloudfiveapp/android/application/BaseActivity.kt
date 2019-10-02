@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.cloudfiveapp.push.CloudFivePush
 import com.cloudfiveapp.push.PushMessageReceiver
+import com.google.firebase.FirebaseApp
 import timber.log.Timber
 
 abstract class BaseActivity : AppCompatActivity() {

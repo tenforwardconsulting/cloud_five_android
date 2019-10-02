@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.cloudfiveapp.android"
+        applicationId "com.cloudfiveapp.dev"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -122,3 +122,5 @@ dependencies {
 
     compile 'com.cloudfiveapp:push-android:1.1.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
