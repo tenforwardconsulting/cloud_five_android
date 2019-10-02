@@ -116,4 +116,9 @@ dependencies {
     // region Debug
     implementation "com.jakewharton.timber:timber:4.7.0"
     // endregion
+
+    implementation "com.google.firebase:firebase-core:17.2.0"
+    implementation "com.google.firebase:firebase-messaging:20.0.0"
+
+    compile 'com.cloudfiveapp:push-android:1.1.0'
 }

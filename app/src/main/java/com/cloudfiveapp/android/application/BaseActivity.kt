@@ -1,7 +1,10 @@
 package com.cloudfiveapp.android.application
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.cloudfiveapp.push.CloudFivePush
+import com.cloudfiveapp.push.PushMessageReceiver
 import timber.log.Timber
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -13,10 +16,13 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //        if (this::class != LoginActivity::class) {
-        //            val rootView = findViewById<ViewGroup>(android.R.id.content)
-        //            lifecycle.addObserver(CloudAnimator(rootView, layoutInflater, true))
-        //        }
+        CloudFivePush.configure(this, object : PushMessageReceiver {
+            override fun onPushMessageReceived(intent: Intent) {
+                println("Received a cloudfive push notification: ${intent.extras}")
+            }
+        });
+
+        CloudFivePush.register();
     }
 
     /**
