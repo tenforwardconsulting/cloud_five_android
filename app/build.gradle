@@ -40,7 +40,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'CLOUDFIVE_DEV', '"false"'
+        buildConfigField 'String', 'CLOUDFIVE_DEV', '"true"'
     }
 
     compileOptions {
@@ -122,7 +122,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:17.2.0"
     implementation "com.google.firebase:firebase-messaging:20.0.0"
 
-    compile 'com.cloudfiveapp:push-android:1.1.0'
+    implementation 'com.cloudfiveapp:push-android:1.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

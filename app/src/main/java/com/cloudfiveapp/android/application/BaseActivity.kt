@@ -1,11 +1,8 @@
 package com.cloudfiveapp.android.application
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.cloudfiveapp.android.BuildConfig
-import com.cloudfiveapp.push.CloudFivePush
-import com.cloudfiveapp.push.PushMessageReceiver
+import com.cloudfiveapp.android.push.PushManager
 import timber.log.Timber
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -17,13 +14,8 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        CloudFivePush.configure(this, object : PushMessageReceiver {
-            override fun onPushMessageReceived(intent: Intent) {
-                println("Received a cloudfive push notification: ${intent.extras}")
-            }
-        }, BuildConfig.CLOUDFIVE_DEV == "true");
-
-        CloudFivePush.register();
+        PushManager.configure(this)
+        PushManager.register(null)
     }
 
     /**
