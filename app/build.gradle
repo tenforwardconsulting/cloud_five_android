@@ -19,7 +19,7 @@ if (file('my.gradle').exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     if (keystorePropertiesFile.exists()) {
         signingConfigs {
@@ -35,12 +35,12 @@ android {
     defaultConfig {
         applicationId "com.cloudfiveapp.dev"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField 'String', 'CLOUDFIVE_DEV', '"false"'
+        buildConfigField 'String', 'CLOUDFIVE_DEV', '"true"'
     }
 
     compileOptions {

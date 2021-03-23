@@ -2,20 +2,38 @@ package com.cloudfiveapp.android.application
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.cloudfiveapp.android.push.PushManager
 import timber.log.Timber
 
-abstract class BaseActivity : AppCompatActivity() {
+
+
+
+
+abstract class BaseActivity : AppCompatActivity(), LifecycleObserver {
 
     companion object {
         const val EXTRA_PREFIX = "com.cloudfiveapp.android"
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        fun onAppBackgrounded() {
+            Timber.d("In Background")
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        fun onAppForegrounded() {
+            Timber.d("In Foreground")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
 
         PushManager.configure(this)
-        PushManager.register(null)
     }
 
     /**

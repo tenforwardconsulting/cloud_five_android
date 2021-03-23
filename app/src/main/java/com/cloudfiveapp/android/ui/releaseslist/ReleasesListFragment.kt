@@ -45,7 +45,9 @@ class ReleasesListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        productId = ReleasesListFragmentArgs.fromBundle(arguments).productId
+        arguments?.let {
+            productId = ReleasesListFragmentArgs.fromBundle(it).productId
+        }
         releasesAdapter.interactor = this
     }
 

@@ -15,14 +15,14 @@ class MockLoginApi(private val delegate: BehaviorDelegate<LoginApi>)
 
     override fun login(loginRequest: LoginRequest): Call<LoginResponse> {
         return if (loginRequest.email == "test@test.com" && loginRequest.password == "test") {
-            delegate.returningResponse(LoginResponse("test_auth_token"))
-                    .login(loginRequest)
-        } else {
             val responseBody = ResponseBody.create(
                     MediaType.parse("application/json"),
                     "{ \"status\": 401, \"message\": \"Invalid email/password combination\" }")
             val response = Response.error<Any>(401, responseBody)
             delegate.returning(Calls.response(response)).login(loginRequest)
+        } else {
+            delegate.returningResponse(LoginResponse("test_auth_token"))
+                    .login(loginRequest)
         }
     }
 }

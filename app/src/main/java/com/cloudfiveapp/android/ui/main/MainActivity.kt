@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
 
         mainToolbar.setupWithNavController(navController)
 
-        navController.addOnNavigatedListener { _, destination ->
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
             mainToolbar.menu.findItem(R.id.mainLogOut).isVisible =
                     destination.id == R.id.productsListFragment
         }

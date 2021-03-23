@@ -9,6 +9,7 @@ import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.model.Outcome
+import com.cloudfiveapp.android.push.PushManager
 import com.cloudfiveapp.android.ui.main.MainActivity
 import com.cloudfiveapp.android.ui.main.SessionManager
 import com.cloudfiveapp.android.util.CloudAnimator
@@ -54,6 +55,7 @@ class LoginActivity : BaseActivity() {
                     toast("Login success!")
                     enableInputs()
                     SessionManager.logIn("auth_token")
+                    PushManager.register(loginEmailInput.text.toString())
                     startActivity(MainActivity.newIntent(this))
                     finish()
                 }
