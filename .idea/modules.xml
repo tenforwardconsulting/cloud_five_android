@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/cloud_five_android.iml" filepath="$PROJECT_DIR$/cloud_five_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cloud_five_android.iml" filepath="$PROJECT_DIR$/.idea/modules/cloud_five_android.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/cloud_five_android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/cloud_five_android.app.iml" />
     </modules>
   </component>

@@ -1,20 +1,3 @@
 <resources>
     <string name="app_name">Cloud Five</string>
-
-    <!--Misc-->
-    <string name="recyclerview_linearlayoutmanager" translatable="false">androidx.recyclerview.widget.LinearLayoutManager</string>
-    <string name="network_error_message">Network error</string>
-    <string name="snackbar_action_open">Open</string>
-
-    <!--Releases-->
-    <string name="build_number_formatted">#%s</string>
-    <string name="row_app_content_description_download_button">Download APK</string>
-
-    <!--Login-->
-    <string name="login_content_description_logo">Cloud Five logo</string>
-    <string name="login_hint_email">Email</string>
-    <string name="login_hint_password">Password</string>
-    <string name="login_button_log_in">Log In</string>
-    <string name="dialog_message_write_storage_permission_rationale">Storage permissions are required to save files.</string>
-
 </resources>

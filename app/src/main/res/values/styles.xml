@@ -1,24 +1,2 @@
 <resources>
-
-    <style name="Base.Theme.CloudFive" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="Theme.CloudFive" parent="Base.Theme.CloudFive">
-    </style>
-
-    <style name="ThemeOverlay.CloudFive.AppBarOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
-        <item name="titleTextColor">@color/white</item>
-        <item name="subtitleTextColor">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
-    </style>
-
-    <style name="LoginErrorAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/errorRed</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
 </resources>

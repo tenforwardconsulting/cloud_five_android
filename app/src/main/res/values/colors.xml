@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#5faee0</color>
-    <color name="colorPrimaryDark">#4986AD</color>
-    <color name="colorAccent">#58585a</color>
-
-    <color name="white">#ffffff</color>
-
-    <color name="textColorSecondary">#DF000000</color>
-
-    <color name="errorRed">#cc0000</color>
+    <color name="blue">#5faee0</color>
 </resources>
