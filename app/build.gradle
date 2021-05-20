@@ -81,6 +81,8 @@ dependencies {
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
+    implementation "com.google.accompanist:accompanist-insets:0.10.0"
+
     // Push
     implementation "com.google.firebase:firebase-core:19.0.0"
     implementation "com.google.firebase:firebase-messaging:22.0.0"
