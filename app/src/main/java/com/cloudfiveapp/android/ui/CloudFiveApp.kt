@@ -3,27 +3,30 @@ package com.cloudfiveapp.android.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.cloudfiveapp.android.R
+import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
 import kotlin.random.Random
@@ -32,22 +35,33 @@ import kotlin.random.Random
 @Composable
 fun CloudFiveApp() {
     ProvideWindowInsets {
-        MaterialTheme {
+        CloudFiveTheme {
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = colorResource(id = R.color.sky_blue))
+                    .background(MaterialTheme.colors.background)
                     .systemBarsPadding()
             ) {
-                Box {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp)
+                ) {
                     val clouds = remember { mutableStateOf(createRandomClouds()) }
-                    NiceClouds(clouds.value)
+                    NiceClouds(
+                        clouds.value,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .weight(1f)
+                    )
 
-                    TextButton(
+                    Button(
                         onClick = {
                             clouds.value = createRandomClouds()
                         },
-                        modifier = Modifier.align(Alignment.BottomCenter)
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
                     ) {
                         Text("Refresh Clouds")
                     }
@@ -57,36 +71,13 @@ fun CloudFiveApp() {
     }
 }
 
-private val DRAWABLE_IDS = listOf(
-    R.drawable.cloud1,
-    R.drawable.cloud2,
-    R.drawable.cloud3,
-    R.drawable.cloud4,
-    R.drawable.cloud5,
-    R.drawable.cloud6,
-    R.drawable.cloud7,
-)
-
-private val SIZES = listOf(70.dp, 80.dp, 100.dp, 120.dp, 150.dp)
-
-data class Cloud(
-    @DrawableRes val drawableRes: Int,
-    val size: Dp,
-)
-
-private fun createRandomClouds() =
-    DRAWABLE_IDS.map { drawableResId ->
-        Cloud(drawableResId, SIZES.random())
-    }
-
 @Composable
-fun NiceClouds(
+private fun NiceClouds(
     clouds: List<Cloud>,
+    modifier: Modifier = Modifier,
 ) {
     BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = colorResource(id = R.color.sky_blue))
+        modifier = modifier
     ) {
         clouds.forEach { cloud ->
             val x = with(LocalDensity.current) {
@@ -110,3 +101,24 @@ fun NiceClouds(
         )
     }
 }
+
+private val DRAWABLE_IDS = listOf(
+    R.drawable.cloud1,
+    R.drawable.cloud2,
+    R.drawable.cloud3,
+    R.drawable.cloud4,
+    R.drawable.cloud5,
+    R.drawable.cloud6,
+)
+
+private val SIZES = listOf(70.dp, 80.dp, 100.dp, 120.dp, 150.dp)
+
+private data class Cloud(
+    @DrawableRes val drawableRes: Int,
+    val size: Dp,
+)
+
+private fun createRandomClouds() =
+    DRAWABLE_IDS.map { drawableResId ->
+        Cloud(drawableResId, SIZES.random())
+    }
