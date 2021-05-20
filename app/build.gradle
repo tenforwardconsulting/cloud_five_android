@@ -52,6 +52,7 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
 
     buildTypes {
@@ -81,7 +82,9 @@ dependencies {
 
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
-    implementation "com.google.accompanist:accompanist-insets:0.10.0"
+    def accompanist_version = '0.10.0'
+    implementation "com.google.accompanist:accompanist-insets:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
     // Push
     implementation "com.google.firebase:firebase-core:19.0.0"

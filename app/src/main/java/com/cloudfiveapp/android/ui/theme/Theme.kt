@@ -10,7 +10,8 @@ private val LightThemeColors = lightColors(
     onPrimary = Color.Black,
     primaryVariant = SilverLining,
     background = SkyBlue,
-    surface = SkyBlue,
+    surface = Color.White,
+    onSurface = Color.Black,
 )
 
 @Composable
