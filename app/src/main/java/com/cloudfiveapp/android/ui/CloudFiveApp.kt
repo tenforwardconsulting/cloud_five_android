@@ -40,12 +40,12 @@ fun CloudFiveApp() {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background)
-                    .systemBarsPadding()
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(bottom = 16.dp)
+                        .systemBarsPadding()
                 ) {
                     val clouds = remember { mutableStateOf(createRandomClouds()) }
                     NiceClouds(
