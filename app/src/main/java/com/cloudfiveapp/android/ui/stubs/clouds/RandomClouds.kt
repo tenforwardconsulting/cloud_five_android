@@ -1,4 +1,4 @@
-package com.cloudfiveapp.android.ui.clouds
+package com.cloudfiveapp.android.ui.stubs.clouds
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

@@ -7,7 +7,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.cloudfiveapp.android.ui.clouds.RandomClouds
+import com.cloudfiveapp.android.ui.stubs.clouds.RandomClouds
 import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.systemBarsPadding
