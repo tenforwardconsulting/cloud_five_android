@@ -1,7 +1,8 @@
 package com.cloudfiveapp.android.ui.stubs.showcase
 
+import android.content.res.Configuration.UI_MODE_NIGHT_NO
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,29 +13,59 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.toPaddingValues
 
-@Preview(showBackground = true, backgroundColor = 4284460768)
+@Preview(uiMode = UI_MODE_NIGHT_NO)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun ThemeShowcase(
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier) {
-        FlavorsList(
-            flavors = FLAVORS
-        )
+    CloudFiveTheme {
+        Surface(color = MaterialTheme.colors.background) {
+            Scaffold(
+                modifier = modifier,
+                topBar = {
+                    TopAppBar(
+                        title = { Text("Widen Collective") },
+                        navigationIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = ""
+                            )
+                        }
+                    )
+                },
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {}) {
+                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add something")
+                    }
+                }
+            ) {
+                FlavorsList(
+                    flavors = FLAVORS
+                )
+            }
+        }
     }
 }
 
@@ -91,7 +122,8 @@ private fun FlavorCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Download,
-                        contentDescription = "Download APK for ${flavor.name}"
+                        contentDescription = "Download APK for ${flavor.name}",
+                        tint = MaterialTheme.colors.primary
                     )
                 }
             }
