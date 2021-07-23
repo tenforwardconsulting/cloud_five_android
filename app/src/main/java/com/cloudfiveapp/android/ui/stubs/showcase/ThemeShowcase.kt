@@ -3,6 +3,7 @@ package com.cloudfiveapp.android.ui.stubs.showcase
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,10 +18,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -30,9 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.toPaddingValues
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.accompanist.insets.ui.Scaffold
+import com.google.accompanist.insets.ui.TopAppBar
 
 @Preview(uiMode = UI_MODE_NIGHT_NO)
 @Preview(uiMode = UI_MODE_NIGHT_YES)
@@ -40,31 +40,43 @@ import com.google.accompanist.insets.toPaddingValues
 fun ThemeShowcase(
     modifier: Modifier = Modifier,
 ) {
-    CloudFiveTheme {
-        Surface(color = MaterialTheme.colors.background) {
-            Scaffold(
-                modifier = modifier,
-                topBar = {
-                    TopAppBar(
-                        title = { Text("Widen Collective") },
-                        navigationIcon = {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = ""
-                            )
-                        }
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text("Widen Collective") },
+                contentPadding = rememberInsetsPaddingValues(
+                    LocalWindowInsets.current.statusBars,
+                    applyBottom = false
+                ),
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = ""
                     )
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = "Add something")
-                    }
                 }
-            ) {
-                FlavorsList(
-                    flavors = FLAVORS
+            )
+        },
+        bottomBar = {
+            Spacer(
+                Modifier
+                    .navigationBarsHeight()
+                    .fillMaxWidth()
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add something"
                 )
             }
+        }
+    ) { contentPadding ->
+        Box(Modifier.padding(contentPadding)) {
+            FlavorsList(
+                flavors = FLAVORS
+            )
         }
     }
 }
@@ -82,8 +94,7 @@ private fun FlavorsList(
     @Suppress("SameParameterValue") flavors: List<Flavor>,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = LocalWindowInsets.current.systemBars.toPaddingValues()
+        modifier = Modifier.fillMaxSize()
     ) {
         items(flavors) { flavor ->
             FlavorCard(flavor)
