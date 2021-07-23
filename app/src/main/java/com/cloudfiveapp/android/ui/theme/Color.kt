@@ -2,6 +2,8 @@ package com.cloudfiveapp.android.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val VeryLightBlue = Color(0xffdfeff9)
+
 val SoftBlue = Color(0xffdff3fe)
 val LightBlue = Color(0xffa6cde5)
 val SkyBlue = Color(0xff5faee0)

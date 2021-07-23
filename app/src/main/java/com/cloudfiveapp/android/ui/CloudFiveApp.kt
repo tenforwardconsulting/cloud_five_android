@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.cloudfiveapp.android.ui.stubs.showcase.ThemeShowcase
 import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.systemBarsPadding
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Preview(showSystemUi = true)
@@ -32,7 +33,9 @@ fun CloudFiveApp() {
                 // RandomClouds(
                 //     modifier = Modifier.systemBarsPadding()
                 // )
-                ThemeShowcase()
+                ThemeShowcase(
+                    modifier = Modifier.systemBarsPadding()
+                )
             }
         }
     }
