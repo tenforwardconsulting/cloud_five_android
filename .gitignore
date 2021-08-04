@@ -7,6 +7,7 @@
 /.idea/caches/*
 /.idea/dictionaries/*
 /.idea/navEditor.xml
+/.idea/deploymentTargetDropDown.xml
 projectFilesBackup
 .DS_Store
 /build
