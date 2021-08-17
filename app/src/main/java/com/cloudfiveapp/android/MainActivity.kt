@@ -11,7 +11,9 @@ import com.cloudfiveapp.android.ui.CloudFiveApp
 import com.cloudfiveapp.android.ui.theme.CloudFiveTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

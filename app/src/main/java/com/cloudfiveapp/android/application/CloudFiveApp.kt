@@ -3,8 +3,10 @@ package com.cloudfiveapp.android.application
 import android.app.Application
 import android.os.StrictMode
 import com.cloudfiveapp.android.BuildConfig
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class CloudFiveApp : Application() {
 
     override fun onCreate() {
