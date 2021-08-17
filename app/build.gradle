@@ -25,7 +25,11 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        // Level options: BASIC, HEADERS, BODY, NONE
+        buildConfigField 'okhttp3.logging.HttpLoggingInterceptor.Level', 'HTTP_LOG_LEVEL', 'okhttp3.logging.HttpLoggingInterceptor.Level.BASIC'
+
         buildConfigField 'String', 'CLOUDFIVE_DEV', '"true"'
+        buildConfigField 'String', 'BASE_URL', '"https://cloudfive.10fw.net"'
     }
 
     if (keystorePropertiesFile.exists()) {
@@ -86,9 +90,10 @@ dependencies {
 
     androidTestImplementation  "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptAndroidTest "com.google.dagger:hilt-compiler:$hilt_version"
-
     testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
     kaptTest "com.google.dagger:hilt-compiler:$hilt_version"
+
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0-alpha03"
 
     // Compose - Declarative UI framework
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -111,6 +116,25 @@ dependencies {
     implementation "com.google.firebase:firebase-core:19.0.0"
     implementation "com.google.firebase:firebase-messaging:22.0.0"
     implementation "com.cloudfiveapp:push-android:1.2.0"
+
+    // Retrofit - HTTP APIs as interfaces
+    def retrofit_version = '2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+
+    // NetworkResponseAdapter - Call adapter to handle errors as state
+    implementation "com.github.haroldadmin:NetworkResponseAdapter:4.2.2"
+
+    // OkHttp - HTTP network library
+    def okhttp_version = '4.9.1'
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // Moshi - JSON Parsing
+    def moshi_version = "1.12.0"
+    implementation "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_version"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
 
     // Logs
     implementation "com.jakewharton.timber:timber:5.0.1"
