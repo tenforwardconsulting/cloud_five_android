@@ -13,7 +13,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -41,9 +40,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesMoshiConverterFactory(): MoshiConverterFactory {
-        return MoshiConverterFactory.create()
-    }
+    fun providesMoshiConverterFactory(): MoshiConverterFactory = MoshiConverterFactory.create()
 
     @Provides
     @Singleton
@@ -51,15 +48,12 @@ object AppModule {
         baseUrl: String,
         client: OkHttpClient,
         moshiConverterFactory: MoshiConverterFactory,
-    ): Retrofit {
-        Timber.d("Creating Retrofit with $baseUrl")
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(moshiConverterFactory)
-            .addCallAdapterFactory(NetworkResponseAdapterFactory())
-            .build()
-    }
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(client)
+        .addConverterFactory(moshiConverterFactory)
+        .addCallAdapterFactory(NetworkResponseAdapterFactory())
+        .build()
 
     @Provides
     @Singleton
