@@ -10,7 +10,7 @@ class ProductsListViewModelFactory
 @Inject constructor(private val repository: ProductsListContract.Repository)
     : ViewModelProvider.Factory {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductsListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return ProductsListViewModel(repository) as T

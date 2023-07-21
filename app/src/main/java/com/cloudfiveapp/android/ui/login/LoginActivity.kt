@@ -9,6 +9,7 @@ import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.application.BaseActivity
 import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.model.Outcome
+import com.cloudfiveapp.android.databinding.ActivityLoginBinding
 import com.cloudfiveapp.android.push.PushManager
 import com.cloudfiveapp.android.ui.main.MainActivity
 import com.cloudfiveapp.android.ui.main.SessionManager
@@ -17,7 +18,6 @@ import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.showKeyboard
 import com.cloudfiveapp.android.util.extensions.toast
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
-import kotlinx.android.synthetic.main.activity_login.*
 import timber.log.Timber
 
 class LoginActivity : BaseActivity() {
@@ -34,10 +34,14 @@ class LoginActivity : BaseActivity() {
         viewModelFactory.get(this, LoginViewModel::class)
     }
 
+    private lateinit var binding: ActivityLoginBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-        lifecycle.addObserver(CloudAnimator(loginParentView, layoutInflater))
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        lifecycle.addObserver(CloudAnimator(binding.loginParentView, layoutInflater))
 
         bindToViewModel()
     }
@@ -48,33 +52,33 @@ class LoginActivity : BaseActivity() {
             when (outcome) {
                 is Outcome.Loading -> {
                     disableInputs()
-                    loginEmailTextInputLayout.error = null
-                    loginPasswordTextInputLayout.error = null
+                    binding.loginEmailTextInputLayout.error = null
+                    binding.loginPasswordTextInputLayout.error = null
                 }
                 is Outcome.Success -> {
                     toast("Login success!")
                     enableInputs()
                     SessionManager.logIn("auth_token")
-                    PushManager.register(loginEmailInput.text.toString())
+                    PushManager.register(binding.loginEmailInput.text.toString())
                     startActivity(MainActivity.newIntent(this))
                     finish()
                 }
                 is Outcome.Error -> {
                     if (!outcome.message.isNullOrEmpty()) {
-                        loginEmailTextInputLayout.error = outcome.message
-                        loginPasswordTextInputLayout.error = outcome.message
+                        binding.loginEmailTextInputLayout.error = outcome.message
+                        binding.loginPasswordTextInputLayout.error = outcome.message
                     } else {
                         toastNetworkError(outcome.error?.message)
                     }
                     enableInputs()
-                    loginEmailInput.showKeyboard()
+                    binding.loginEmailInput.showKeyboard()
                 }
             }
         })
 
-        loginButton.setOnClickListener { attemptLogin() }
+        binding.loginButton.setOnClickListener { attemptLogin() }
 
-        loginPasswordInput.setOnEditorActionListener { _, actionId, _ ->
+        binding.loginPasswordInput.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     attemptLogin()
@@ -86,20 +90,20 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun enableInputs() {
-        loginEmailTextInputLayout.isEnabled = true
-        loginPasswordTextInputLayout.isEnabled = true
-        loginButton.isEnabled = true
+        binding.loginEmailTextInputLayout.isEnabled = true
+        binding.loginPasswordTextInputLayout.isEnabled = true
+        binding.loginButton.isEnabled = true
     }
 
     private fun disableInputs() {
-        loginEmailTextInputLayout.isEnabled = false
-        loginPasswordTextInputLayout.isEnabled = false
-        loginButton.isEnabled = false
+        binding.loginEmailTextInputLayout.isEnabled = false
+        binding.loginPasswordTextInputLayout.isEnabled = false
+        binding.loginButton.isEnabled = false
     }
 
     private fun attemptLogin() {
-        val email = loginEmailInput.text.toString()
-        val password = loginPasswordInput.text.toString()
+        val email = binding.loginEmailInput.text.toString()
+        val password = binding.loginPasswordInput.text.toString()
         if (email.isNotBlank() && password.isNotBlank()) {
             viewModel.login(email, password)
         }

@@ -110,21 +110,21 @@ class CloudAnimator(private val parentViewGroup: ViewGroup,
             }
 
             addListener(object : Animator.AnimatorListener {
-                override fun onAnimationEnd(animation: Animator?, isReverse: Boolean) {
+                override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
                     animations.remove(animation)
                     parentViewGroup.removeView(cloud)
                     addRandomCloud()
                 }
 
-                override fun onAnimationStart(animation: Animator?, isReverse: Boolean) {
+                override fun onAnimationStart(animation: Animator, isReverse: Boolean) {
                     // Add to index 0 to ensure clouds are behind all other views in parent.
                     parentViewGroup.addView(cloud, 0)
                 }
 
-                override fun onAnimationEnd(animation: Animator?) = Unit
-                override fun onAnimationRepeat(animation: Animator?) = Unit
-                override fun onAnimationCancel(animation: Animator?) = Unit
-                override fun onAnimationStart(animation: Animator?) = Unit
+                override fun onAnimationEnd(animation: Animator) = Unit
+                override fun onAnimationRepeat(animation: Animator) = Unit
+                override fun onAnimationCancel(animation: Animator) = Unit
+                override fun onAnimationStart(animation: Animator) = Unit
             })
 
             start()
