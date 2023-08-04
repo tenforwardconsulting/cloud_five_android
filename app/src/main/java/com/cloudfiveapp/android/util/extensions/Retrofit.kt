@@ -18,7 +18,7 @@ fun <T> Response<T>.toOutcome(errorConverter: ApiErrorConverter): Outcome<T> {
         val errorBody = errorBody()
         if (errorBody != null) {
             try {
-                val message = errorConverter.convert(errorBody).message
+                val message = errorConverter.convert(errorBody)!!.message
                 Outcome.error<T>(null, message)
             } catch (ioEx: IOException) {
                 Outcome.error<T>(ioEx)

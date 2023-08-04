@@ -1,10 +1,12 @@
 package com.cloudfiveapp.android.ui.productslist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.data.model.Product
+import com.cloudfiveapp.android.databinding.RowProductBinding
 import com.cloudfiveapp.android.util.extensions.inflate
 
 class ProductsAdapter : ListAdapter<Product, ProductViewHolder>(DIFF_CALLBACK) {
@@ -25,7 +27,8 @@ class ProductsAdapter : ListAdapter<Product, ProductViewHolder>(DIFF_CALLBACK) {
     var interactor: ProductsInteractor? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder(parent.inflate(R.layout.row_product))
+        val itemBinding = RowProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {

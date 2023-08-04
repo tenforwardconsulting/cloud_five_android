@@ -1,11 +1,11 @@
 package com.cloudfiveapp.android.ui.releaseslist
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.cloudfiveapp.android.R
 import com.cloudfiveapp.android.data.model.Release
-import com.cloudfiveapp.android.util.extensions.inflate
+import com.cloudfiveapp.android.databinding.RowReleaseBinding
 
 class ReleasesAdapter : ListAdapter<Release, ReleaseViewHolder>(DIFF_CALLBACK) {
 
@@ -25,7 +25,8 @@ class ReleasesAdapter : ListAdapter<Release, ReleaseViewHolder>(DIFF_CALLBACK) {
     var interactor: ReleaseInteractor? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReleaseViewHolder {
-        return ReleaseViewHolder(parent.inflate(R.layout.row_release))
+        val itemBinding = RowReleaseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ReleaseViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(holder: ReleaseViewHolder, position: Int) {

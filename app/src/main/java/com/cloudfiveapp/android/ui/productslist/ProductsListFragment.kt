@@ -11,29 +11,32 @@ import com.cloudfiveapp.android.application.BaseFragment
 import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Product
+import com.cloudfiveapp.android.databinding.FragmentProductsListBinding
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
-import kotlinx.android.synthetic.main.fragment_products_list.view.*
 
 class ProductsListFragment
     : BaseFragment(),
       ProductsInteractor {
 
     private val adapter = ProductsAdapter()
-
+    private var _binding: FragmentProductsListBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adapter.interactor = this
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_products_list, container, false)
+        _binding = FragmentProductsListBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.productsRecycler.adapter = adapter
+        binding.productsRecycler.adapter = adapter
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -46,7 +49,7 @@ class ProductsListFragment
     }
 
     private fun bindToViewModel(viewModel: ProductsListViewModel) {
-        view?.productsSwipeRefresh?.setOnRefreshListener { viewModel.refreshProducts() }
+        binding.productsSwipeRefresh.setOnRefreshListener { viewModel.refreshProducts() }
 
         viewModel.getProducts()
 
@@ -54,7 +57,7 @@ class ProductsListFragment
             val view = view ?: return@Observer
             when (outcome) {
                 is Outcome.Loading -> {
-                    view.productsSwipeRefresh.isRefreshing = outcome.loading
+                    binding.productsSwipeRefresh.isRefreshing = outcome.loading
                 }
                 is Outcome.Success -> {
                     adapter.submitList(outcome.data)
@@ -63,8 +66,13 @@ class ProductsListFragment
                     context?.toastNetworkError(outcome.message ?: outcome.error?.message)
                 }
             }
-            view.productsEmptyText.visible(adapter.itemCount == 0)
+            binding.productsEmptyText.visible(adapter.itemCount == 0)
         })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // region ProductsInteractor

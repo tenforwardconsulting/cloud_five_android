@@ -1,12 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
-
-androidExtensions {
-    experimental = true
-}
 
 def keystorePropertiesFile = rootProject.file("release-signing.properties")
 def keystoreProperties = new Properties()
@@ -19,7 +15,11 @@ if (file('my.gradle').exists()) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 34
+
+    buildFeatures {
+        viewBinding = true
+    }
 
     if (keystorePropertiesFile.exists()) {
         signingConfigs {
@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "com.cloudfiveapp.dev"
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion 33
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,8 +44,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildTypes {
@@ -59,70 +59,72 @@ android {
     }
 
     flavorDimensions "default"
+    namespace 'com.cloudfiveapp.android'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // region Test
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 
     ext.espressoVersion = '3.0.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
     // endregion
 
     // region Support Libs
     ext.supportLibraryVersion = '27.1.1'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0-alpha01'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha10'
     // endregion
 
     // region Arch Components
     ext.architectureComponentsVersion = '1.1.1'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    def nav_version = "1.0.0-alpha07"
-    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+    def nav_version = "2.6.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     // endregion
 
     // region Material UI
-    implementation "com.afollestad.material-dialogs:core:2.0.0-beta5"
+    implementation "com.afollestad.material-dialogs:core:3.3.0"
     // endregion
 
     // region DI
-    ext.daggerVersion = '2.12'
+    ext.daggerVersion = '2.43.2'
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     // endregion
 
     // region Net
-    ext.retrofitVersion = '2.3.0'
+    ext.retrofitVersion = '2.9.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     implementation "com.squareup.retrofit2:retrofit-mock:$retrofitVersion"
 
-    implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.14.9"
 
-    implementation "com.squareup.moshi:moshi:1.5.0"
-    implementation "com.squareup.moshi:moshi-kotlin:1.5.0"
+    implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
     // endregion
 
     // region Debug
     implementation "com.jakewharton.timber:timber:4.7.0"
     // endregion
 
-    implementation "com.google.firebase:firebase-core:17.2.0"
-    implementation "com.google.firebase:firebase-messaging:20.0.0"
+    implementation "com.google.firebase:firebase-core:21.1.1"
+    implementation "com.google.firebase:firebase-messaging:23.2.0"
 
-    implementation 'com.cloudfiveapp:push-android:1.1.0'
+    implementation 'com.cloudfiveapp:push-android:1.3.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

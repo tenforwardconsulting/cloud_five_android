@@ -19,11 +19,11 @@ import com.cloudfiveapp.android.application.injection.Injector
 import com.cloudfiveapp.android.data.ProductId
 import com.cloudfiveapp.android.data.model.Outcome
 import com.cloudfiveapp.android.data.model.Release
+import com.cloudfiveapp.android.databinding.FragmentReleasesListBinding
 import com.cloudfiveapp.android.util.extensions.get
 import com.cloudfiveapp.android.util.extensions.toUri
 import com.cloudfiveapp.android.util.extensions.toastNetworkError
 import com.cloudfiveapp.android.util.extensions.visible
-import kotlinx.android.synthetic.main.fragment_releases_list.view.*
 import timber.log.Timber
 import java.io.File
 
@@ -43,6 +43,9 @@ class ReleasesListFragment
 
     private lateinit var productId: ProductId
 
+    private var _binding: FragmentReleasesListBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,7 +60,7 @@ class ReleasesListFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.releasesRecycler.adapter = releasesAdapter
+        binding.releasesRecycler.adapter = releasesAdapter
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,7 +73,7 @@ class ReleasesListFragment
     private fun bindToViewModel(viewModel: ReleasesListViewModel) {
         viewModel.getReleases(productId)
 
-        view?.releasesSwipeRefresh?.setOnRefreshListener {
+        binding.releasesSwipeRefresh.setOnRefreshListener {
             viewModel.refreshReleases()
         }
 
@@ -79,11 +82,11 @@ class ReleasesListFragment
             Timber.d("outcome: $outcome")
             when (outcome) {
                 is Outcome.Loading -> {
-                    view.releasesSwipeRefresh.isRefreshing = outcome.loading
+                    binding.releasesSwipeRefresh.isRefreshing = outcome.loading
                 }
                 is Outcome.Success -> {
                     releasesAdapter.submitList(outcome.data)
-                    view.releasesEmptyText.visible(outcome.data.isEmpty())
+                    binding.releasesEmptyText.visible(outcome.data.isEmpty())
                 }
                 is Outcome.Error -> {
                     context?.toastNetworkError(outcome.message ?: outcome.error?.message)
