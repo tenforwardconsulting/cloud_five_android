@@ -70,7 +70,7 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(releaseDownloadBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+        registerReceiver(releaseDownloadBroadcastReceiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_NOT_EXPORTED)
     }
 
     override fun onPause() {
